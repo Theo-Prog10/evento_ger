@@ -14,12 +14,29 @@ public class ControllerLocal : ControllerBase
         _context = context;
     }
     
+    // lista locais cadastrados
     [HttpGet("locais")]
-    public async Task<ActionResult<IEnumerable<Local>>> GetLocal()
+    public async Task<ActionResult<IEnumerable<Local>>> GetLocais()
     {
         return await _context.Locais.ToListAsync();
     }
     
+    // lista local por id
+    [HttpGet("local/{id}")]
+    public async Task<ActionResult<IEnumerable<Local>>> GetLocal(int id)
+    {
+        var local = await _context.Locais
+            .FirstOrDefaultAsync(l => l.Id == id);
+
+        if (local == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(local);
+    }
+    
+    // cria local
     [HttpPost("local")]
     public async Task<ActionResult<Local>> PostLocal(Local local)
     {
@@ -29,6 +46,7 @@ public class ControllerLocal : ControllerBase
         return CreatedAtAction(nameof(GetLocal), new { id = local.Id }, local);
     }
     
+    // apaga local por id
     [HttpDelete("locais/{localId}")]
     public async Task<IActionResult> DeleteLocal(int localId)
     {
@@ -41,6 +59,7 @@ public class ControllerLocal : ControllerBase
         return NoContent();
     }
     
+    // atualiza local por id
     [HttpPut("locais/{id}")]
     public async Task<IActionResult> PutLocal(int id, Local inputLocal)
     {

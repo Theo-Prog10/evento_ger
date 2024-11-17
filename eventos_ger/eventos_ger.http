@@ -1,14 +1,12 @@
-@eventos_ger_HostAddress = https://localhost:5252
+//@eventos_ger_HostAddress = http://localhost:5252
+@eventos_ger_HostAddress = https://localhost:7005
 
-GET {{eventos_ger_HostAddress}}/locais/
-Accept: application/json
-
-### 
-
+### criar local
 POST {{eventos_ger_HostAddress}}/local
 Content-Type: application/json
 
 {
+  "nome": "Praça da igreja",
   "logradouro": "rua",
   "numero": 20,
   "UF": "ES",
@@ -16,4 +14,53 @@ Content-Type: application/json
   "bairro": "jardim camburi"
 }
 
-###
+### criar participante
+
+POST {{eventos_ger_HostAddress}}/participantes
+Content-Type: application/json
+
+{
+  "nome": "Eduardo",
+  "nascimento": "21/02/2004",
+  "cpf": "177.031.757-06",
+  "tipo_ingresso": "gratuito",
+  "status_inscricao": "pendente"
+}
+
+### criar palestrante
+
+POST {{eventos_ger_HostAddress}}/palestrantes
+Content-Type: application/json
+
+{
+  "nome": "Joao",
+  "nascimento": "21/02/2005",
+  "cpf": "177.031.757-08",
+  "biografia": "bibibibibibi",
+  "especialidade": "aaaaaaaaaa"
+}
+
+### criar organizador
+
+POST {{eventos_ger_HostAddress}}/organizadores
+Content-Type: application/json
+
+{
+  "nome": "Maria",
+  "nascimento": "21/03/2000",
+  "cpf": "177.031.797-08",
+  "contato": "27998987206"
+}
+
+### criar evento
+
+POST {{eventos_ger_HostAddress}}/eventos
+Content-Type: application/json
+
+{
+  "nome": "Insensivão Python",
+  "descricao": "Aula interativa de 4h de python",
+  "data": "30/11/2024",
+  "id_local": 1,
+  "id_organizador": 1
+}

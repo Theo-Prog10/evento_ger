@@ -14,12 +14,31 @@ public class ControllerOrganizador : ControllerBase
         _context = context;
     }
     
+    // lista organizadores
     [HttpGet("/organizadores")]
     public async Task<ActionResult<IEnumerable<Organizador>>> GetOrganizadores()
     {
         return await _context.Organizadores.Include(p => p.eventos_organizados).ToListAsync();
     }
     
+    // Lista organizador por id
+    [HttpGet("/organizador/{id}")]
+    public async Task<ActionResult<Organizador>> GetOrganizador(int id)
+    {
+        // Busca o organizador pelo ID, incluindo os eventos organizados
+        var organizador = await _context.Organizadores
+            .Include(o => o.eventos_organizados) // Inclui eventos organizados
+            .FirstOrDefaultAsync(o => o.Id == id);
+
+        if (organizador == null)
+        {
+            return NotFound(new { mensagem = "Organizador não encontrado." });
+        }
+
+        return Ok(organizador);
+    }
+    
+    // cria organizador
     [HttpPost("organizadores")]
     public async Task<ActionResult<Organizador>> PostOrganizador(Organizador organizador)
     {
@@ -29,6 +48,7 @@ public class ControllerOrganizador : ControllerBase
         return CreatedAtAction(nameof(GetOrganizadores), new { id = organizador.Id }, organizador);
     }
     
+    // atualizar organizador por id
     [HttpPut("organizador/{id}")]
     public async Task<IActionResult> PutOrganizador(int id, Organizador inputOrganizador)
     {
@@ -46,6 +66,7 @@ public class ControllerOrganizador : ControllerBase
         return NoContent();
     }
     
+    // apaga organizador
     [HttpDelete("organizador/{organizadorId}")]
     public async Task<IActionResult> DeleteOrganizador(int organizadorId)
     {
@@ -57,7 +78,4 @@ public class ControllerOrganizador : ControllerBase
 
         return NoContent();
     }
-    
-    
-
 }

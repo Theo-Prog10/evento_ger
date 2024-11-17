@@ -14,6 +14,7 @@ public class EventoController : ControllerBase
         _context = context;
     }
     
+    // listar eventos
     [HttpGet ("/eventos")]
     public async Task<ActionResult<IEnumerable<Evento>>> GetEventos()
     {
@@ -23,7 +24,7 @@ public class EventoController : ControllerBase
             .ToListAsync();
     }
 
-    
+    // listar evento por id
     [HttpGet("evento/{id}")]
     public async Task<ActionResult<Evento>> GetEvento(int id)
     {
@@ -39,14 +40,15 @@ public class EventoController : ControllerBase
 
         return evento;
     }
-
     
+    // criar evento
     [HttpPost("eventos")]
     public async Task<ActionResult<Evento>> PostEvento(Evento evento)
     {
-        // Verifica se o organizador associado existe
+
+        // Verifica se o organizador associado existe no banco de dados
         var organizador = await _context.Organizadores
-            .Include(o => o.eventos_organizados) // Inclui os eventos do organizador
+            .Include(o => o.eventos_organizados) // Inclui os eventos organizados
             .FirstOrDefaultAsync(o => o.Id == evento.id_organizador);
 
         if (organizador == null)
@@ -54,11 +56,11 @@ public class EventoController : ControllerBase
             return NotFound(new { mensagem = "Organizador não encontrado." });
         }
 
-        // Adiciona o evento à lista de eventos do organizador
-        organizador.eventos_organizados.Add(evento);
-
         // Adiciona o evento ao contexto
         _context.Eventos.Add(evento);
+        
+        // Adiciona evento ao organizador
+        organizador.eventos_organizados.Add(evento);
 
         // Salva as alterações no banco de dados
         await _context.SaveChangesAsync();
@@ -66,7 +68,7 @@ public class EventoController : ControllerBase
         return CreatedAtAction(nameof(GetEvento), new { id = evento.Id }, evento);
     }
 
-    
+    // atualizar evento
     [HttpPut("evento/{id}")]
     public async Task<IActionResult> PutEvento(int id, Evento evento)
     {
@@ -95,6 +97,8 @@ public class EventoController : ControllerBase
 
         return NoContent();
     }
+    
+    // apagar evento
     [HttpDelete("evento/{id}")]
     public async Task<IActionResult> DeleteEvento(int id)
     {
@@ -114,8 +118,4 @@ public class EventoController : ControllerBase
     {
         return _context.Eventos.Any(e => e.Id == id);
     }
-    
-    
-    
-
 }

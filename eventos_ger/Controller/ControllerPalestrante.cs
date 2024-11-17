@@ -14,12 +14,31 @@ public class ControllerPalestrantes : ControllerBase
         _context = context;
     }
     
+    // lista palestrantes
     [HttpGet("/palestrantes")]
     public async Task<ActionResult<IEnumerable<Palestrante>>> GetPalestrantes()
     {
         return await _context.Palestrantes.Include(p => p.palestras_ministradas).ToListAsync();
     }
     
+    // Lista palestrante por id
+    [HttpGet("/palestrante/{id}")]
+    public async Task<ActionResult<Organizador>> GetPalestrante(int id)
+    {
+        // Busca o palestrante pelo ID, incluindo palestras_ministradas
+        var palestrante = await _context.Palestrantes
+            .Include(p => p.palestras_ministradas) // Inclui palestras_ministradas
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (palestrante == null)
+        {
+            return NotFound(new { mensagem = "Palestrante não encontrado." });
+        }
+
+        return Ok(palestrante);
+    }
+    
+    // cria palestrante
     [HttpPost("palestrantes")]
     public async Task<ActionResult<Palestrante>> PostPalestrante(Palestrante palestrante)
     {
@@ -29,6 +48,7 @@ public class ControllerPalestrantes : ControllerBase
         return CreatedAtAction(nameof(GetPalestrantes), new { id = palestrante.Id }, palestrante);
     }
     
+    // atualiza palestrante por id
     [HttpPut("palaestrante/{id}")]
     public async Task<IActionResult> PutPalestrante(int id, Palestrante inputPalestrante)
     {
@@ -46,6 +66,7 @@ public class ControllerPalestrantes : ControllerBase
         return NoContent();
     }
     
+    // apaga palestrante
     [HttpDelete("palestrante/{participanteId}")]
     public async Task<IActionResult> DeletePalestrnate(int palestranteId)
     {
@@ -57,7 +78,4 @@ public class ControllerPalestrantes : ControllerBase
 
         return NoContent();
     }
-    
-    
-
 }

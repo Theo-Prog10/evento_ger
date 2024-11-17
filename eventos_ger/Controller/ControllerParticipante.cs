@@ -14,12 +14,31 @@ public class ControllerParticipantes : ControllerBase
         _context = context;
     }
     
+    // lista participantes
     [HttpGet("/participantes")]
     public async Task<ActionResult<IEnumerable<Participante>>> GetParticipantes()
     {
         return await _context.Participantes.Include(p => p.Eventos_inscritos).ToListAsync();
     }
     
+    // Lista participante por id
+    [HttpGet("/participante/{id}")]
+    public async Task<ActionResult<Participante>> GetParticipante(int id)
+    {
+        // Busca o participante pelo ID, incluindo Eventos_inscritos
+        var participante = await _context.Participantes
+            .Include(p => p.Eventos_inscritos) // Inclui Eventos_inscritos
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (participante == null)
+        {
+            return NotFound(new { mensagem = "Participante não encontrado." });
+        }
+
+        return Ok(participante);
+    }
+    
+    // cria participante
     [HttpPost("participantes")]
     public async Task<ActionResult<Participante>> PostPessoa(Participante participante)
     {
@@ -29,6 +48,7 @@ public class ControllerParticipantes : ControllerBase
         return CreatedAtAction(nameof(GetParticipantes), new { id = participante.Id }, participante);
     }
     
+    // atualiza dados participante
     [HttpPut("participante/{id}")]
     public async Task<IActionResult> PutParticipante(int id, Participante inputParticipante)
     {
@@ -46,6 +66,7 @@ public class ControllerParticipantes : ControllerBase
         return NoContent();
     }
     
+    // apaga participante
     [HttpDelete("participante/{participanteId}")]
     public async Task<IActionResult> DeleteParticipante(int participanteId)
     {
@@ -77,5 +98,4 @@ public class ControllerParticipantes : ControllerBase
         return NoContent();
     }
     
-
 }

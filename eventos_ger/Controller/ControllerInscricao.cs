@@ -16,6 +16,7 @@ public class ControllerInscricao
         _context = context;
     }
     
+    // inscreve participante em evento
     [HttpPost("{eventoId}/participantes/{participanteId}")]
     public async Task AddParticipante(int eventoId, int participanteId)
     {
@@ -40,6 +41,7 @@ public class ControllerInscricao
         
     }
     
+    // adiciona palestrante em evento
     [HttpPost("{eventoId}/palestrantes/{palestranteId}")]
     public async Task AddPalestrante(int eventoId, int palestranteId)
     {
@@ -47,14 +49,12 @@ public class ControllerInscricao
         var evento = await _context.Eventos
             .Include(e => e.palestrantes_presentes)
             .FirstOrDefaultAsync(e => e.Id == eventoId);
-        
+
 
         // Buscar o palestrante
         var palestrante = await _context.Palestrantes
             .Include(p => p.palestras_ministradas)
             .FirstOrDefaultAsync(p => p.Id == palestranteId);
-
-        
 
         // Adicionar o palestrante ao evento e vice-versa
         evento.palestrantes_presentes.Add(palestrante);
@@ -63,8 +63,4 @@ public class ControllerInscricao
         await _context.SaveChangesAsync();
         
     }
-    
-    
-
-
 }
