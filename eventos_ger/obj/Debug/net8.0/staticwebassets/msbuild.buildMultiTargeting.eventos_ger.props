@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\eventos_ger.props" />
+</Project>
