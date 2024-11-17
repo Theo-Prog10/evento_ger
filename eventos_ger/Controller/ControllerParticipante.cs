@@ -29,6 +29,53 @@ public class ControllerParticipantes : ControllerBase
         return CreatedAtAction(nameof(GetParticipantes), new { id = participante.Id }, participante);
     }
     
+    [HttpPut("participante/{id}")]
+    public async Task<IActionResult> PutParticipante(int id, Participante inputParticipante)
+    {
+        var participante = await _context.Participantes.FindAsync(id);
+        if (participante == null) return NotFound();
+
+        participante.nome = inputParticipante.nome;
+        participante.nascimento = inputParticipante.nascimento;
+        participante.cpf = inputParticipante.cpf;
+        participante.status_inscricao = inputParticipante.status_inscricao;
+        participante.tipo_ingresso = inputParticipante.tipo_ingresso;
+
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+    
+    [HttpDelete("participante/{participanteId}")]
+    public async Task<IActionResult> DeleteParticipante(int participanteId)
+    {
+        var participante = await _context.Participantes.FindAsync(participanteId);
+        if (participante == null) return NotFound();
+
+        _context.Participantes.Remove(participante);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+    
+    [HttpDelete("participante/{participanteId}/eventos/{eventoId}")]
+    public async Task<IActionResult> DeleteEvento(int participanteId, int eventoId)
+    {
+        var evento = await _context.Eventos
+            .Include(e => e.Participantes)
+            .FirstOrDefaultAsync(e => e.Id == eventoId);
+
+        if (evento == null) return NotFound();
+
+        var participante = evento.Participantes.FirstOrDefault(p => p.Id == participanteId);
+        if (participante == null) return NotFound();
+
+        evento.Participantes.Remove(participante);
+
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
     
 
 }
