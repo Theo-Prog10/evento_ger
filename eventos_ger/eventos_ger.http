@@ -1,6 +1,19 @@
 @eventos_ger_HostAddress = http://localhost:5252
 
-GET {{eventos_ger_HostAddress}}/weatherforecast/
+GET {{eventos_ger_HostAddress}}/locais/
 Accept: application/json
+
+### 
+
+POST {{eventos_ger_HostAddress}}/local
+Content-Type: application/json
+
+{
+  "logradouro": "rua",
+  "numero": 20,
+  "UF": "ES",
+  "cidade": "Vitoria",
+  "bairro": "jardim camburi"
+}
 
 ###

@@ -1,0 +1,8 @@
+C:\Users\edudu\RiderProjects\evento_ger\obj\Debug\net8.0\evento_ger.csproj.AssemblyReference.cache
+C:\Users\edudu\RiderProjects\evento_ger\obj\Debug\net8.0\evento_ger.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\edudu\RiderProjects\evento_ger\obj\Debug\net8.0\evento_ger.AssemblyInfoInputs.cache
+C:\Users\edudu\RiderProjects\evento_ger\obj\Debug\net8.0\evento_ger.AssemblyInfo.cs
+C:\Users\edudu\RiderProjects\evento_ger\obj\Debug\net8.0\evento_ger.csproj.CoreCompileInputs.cache
+C:\Users\edudu\RiderProjects\evento_ger\obj\Debug\net8.0\evento_ger.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\edudu\RiderProjects\evento_ger\obj\Debug\net8.0\evento_ger.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\edudu\RiderProjects\evento_ger\obj\Debug\net8.0\evento_ger.sourcelink.json
