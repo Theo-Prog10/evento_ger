@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eventos_ger", "eventos_ger\eventos_ger.csproj", "{D119D973-B8A2-40C0-97A7-530B12AEF006}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D119D973-B8A2-40C0-97A7-530B12AEF006}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D119D973-B8A2-40C0-97A7-530B12AEF006}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D119D973-B8A2-40C0-97A7-530B12AEF006}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D119D973-B8A2-40C0-97A7-530B12AEF006}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
