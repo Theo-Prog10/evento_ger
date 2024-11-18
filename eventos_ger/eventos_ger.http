@@ -61,10 +61,23 @@ Content-Type: application/json
   "nome": "Insensivão Python",
   "descricao": "Aula interativa de 4h de python",
   "data": "30/11/2024",
+  "hora": "15:00",
   "id_local": 1,
   "id_organizador": 1
 }
 
-###
+### adiciona participante
 
-POST https://localhost:7005/evento/2/participantes/2
+POST {{eventos_ger_HostAddress}}/evento/1/participantes/1
+
+### adiciona palestrante
+
+POST {{eventos_ger_HostAddress}}/evento/1/palestrantes/1
+
+### remove participante
+
+DELETE {{eventos_ger_HostAddress}}/evento/1/participantes/1
+
+### remove palestrante
+
+DELETE {{eventos_ger_HostAddress}}/evento/1/palestrantes/1

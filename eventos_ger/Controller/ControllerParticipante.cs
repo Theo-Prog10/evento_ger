@@ -77,23 +77,4 @@ public class ControllerParticipantes : ControllerBase
 
         return NoContent();
     }
-    
-    [HttpDelete("participante/{participanteId}/eventos/{eventoId}")]
-    public async Task<IActionResult> DeleteEvento(int participanteId, int eventoId)
-    {
-        var evento = await _context.Eventos
-            .FirstOrDefaultAsync(e => e.Id == eventoId);
-
-        if (evento == null) return NotFound();
-
-        var participante = evento.Participantes.FirstOrDefault(p => p == participanteId);
-        if (participante == null) return NotFound();
-
-        evento.Participantes.Remove(participante);
-
-        await _context.SaveChangesAsync();
-
-        return NoContent();
-    }
-    
 }

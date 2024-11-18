@@ -59,7 +59,6 @@ public class ControllerOrganizador : ControllerBase
         organizador.cpf = inputOrganizador.cpf;
         organizador.contato = inputOrganizador.contato;
         
-
         await _context.SaveChangesAsync();
 
         return NoContent();

@@ -54,7 +54,7 @@ public class ControllerPalestrantes : ControllerBase
         var palestrante = await _context.Palestrantes.FindAsync(id);
         if (palestrante == null) return NotFound();
 
-        palestrante.Nome = inputPalestrante.Nome;
+        palestrante.nome = inputPalestrante.nome;
         palestrante.nascimento = inputPalestrante.nascimento;
         palestrante.cpf = inputPalestrante.cpf;
         palestrante.biografia = inputPalestrante.biografia;
