@@ -6,6 +6,11 @@ public class PalestranteDTO
         public string Nome { get; set; } = string.Empty; 
         public string? Biografia { get; set; } 
         public string? Especialidade { get; set; } 
-        public List<string> PalestrasMinistradas { get; set; } = new();
+        
+        public string? Nascimento { get; set; } 
+        
+        public string? cpf { get; set; }
+
+        public List<int> PalestrasMinistradas { get; set; } = new();
     
 }

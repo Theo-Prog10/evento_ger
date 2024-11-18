@@ -3,5 +3,5 @@
 public class Organizador : Pessoa
 {
     public string? contato { get; set; }
-    public List<int> eventos_organizados { get; set; } = new();
+    public List<int> EventosOrganizados { get; set; } = new();
 }

@@ -8,11 +8,11 @@ public class EventoDTO
     public string? Descricao { get; set; } 
     public string? Data { get; set; } 
     public string? Horario { get; set; } 
-    public string NomeLocal { get; set; } = string.Empty; 
-    public string NomeOrganizador { get; set; } = string.Empty; 
+    public int id_local { get; set; } 
+    public int id_organizador { get; set; } 
                     
     
-    public List<string> Palestrantes { get; set; } = new(); 
-    public List<string> Participantes { get; set; } = new();
+    public List<int> Palestrantes { get; set; } = new(); 
+    public List<int> Participantes { get; set; } = new();
     
 }

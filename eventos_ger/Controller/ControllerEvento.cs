@@ -1,116 +1,149 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using eventos_ger.Model;
-using Microsoft.EntityFrameworkCore;
+using eventos_ger.Model.DTOs;
+using eventos_ger.Repository.Interfaces;
 
-namespace eventos_ger.Controller;
-[ApiController]
-
-public class EventoController : ControllerBase
+namespace eventos_ger.Controller
 {
-    private readonly Ger_Evento_Bd _context;
-
-    public EventoController(Ger_Evento_Bd context)
+    [ApiController]
+    public class EventoController : ControllerBase
     {
-        _context = context;
-    }
-    
-    // listar eventos
-    [HttpGet ("/eventos")]
-    public async Task<ActionResult<IEnumerable<Evento>>> GetEventos()
-    {
-        return await _context.Eventos
-            .ToListAsync();
-    }
+        private readonly IEventoRepository _eventoRepository;
+        private readonly IOrganizadorRepository _organizadorRepository;
 
-    // listar evento por id
-    [HttpGet("evento/{id}")]
-    public async Task<ActionResult<Evento>> GetEvento(int id)
-    {
-        var evento = await _context.Eventos
-            .FirstOrDefaultAsync(e => e.Id == id);
-
-        if (evento == null)
+        public EventoController(IEventoRepository eventoRepository, IOrganizadorRepository organizadorRepository)
         {
-            return NotFound();
+            _eventoRepository = eventoRepository;
+            _organizadorRepository = organizadorRepository;
         }
 
-        return evento;
-    }
-    
-    // criar evento
-    [HttpPost("eventos")]
-    public async Task<ActionResult<Evento>> PostEvento(Evento evento)
-    {
-
-        // Verifica se o organizador associado existe no banco de dados
-        var organizador = await _context.Organizadores
-            .FirstOrDefaultAsync(o => o.Id == evento.id_organizador);
-
-        if (organizador == null)
+        // listar eventos
+        [HttpGet("/eventos")]
+        public async Task<ActionResult<IEnumerable<EventoDTO>>> GetEventos()
         {
-            return NotFound(new { mensagem = "Organizador não encontrado." });
+            var eventos = await _eventoRepository.ObterEventosAsync();
+
+            var eventosDTO = eventos.Select(e => new EventoDTO
+            {
+                Id = e.Id,
+                Nome = e.nome,
+                Descricao = e.descricao,
+                Data = e.data,
+                Horario = e.horario,
+                id_local = e.id_local,
+                id_organizador = e.id_organizador,
+                Palestrantes = e.palestrantes_presentes,
+                Participantes = e.Participantes
+            }).ToList();
+
+            return Ok(eventosDTO);
         }
 
-        // Adiciona o evento ao contexto
-        _context.Eventos.Add(evento);
-        
-        // Adiciona evento ao organizador
-        organizador.eventos_organizados.Add(evento.Id);
-
-        // Salva as alterações no banco de dados
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(GetEvento), new { id = evento.Id }, evento);
-    }
-
-    // atualizar evento
-    [HttpPut("evento/{id}")]
-    public async Task<IActionResult> PutEvento(int id, Evento evento)
-    {
-        if (id != evento.Id)
+        // listar evento por id
+        [HttpGet("evento/{id}")]
+        public async Task<ActionResult<EventoDTO>> GetEvento(int id)
         {
-            return BadRequest();
-        }
+            var evento = await _eventoRepository.ObterPorIdAsync(id);
 
-        _context.Entry(evento).State = EntityState.Modified;
-
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!EventoExists(id))
+            if (evento == null)
             {
                 return NotFound();
             }
-            else
+
+            var eventoDTO = new EventoDTO
             {
-                throw;
-            }
+                Id = evento.Id,
+                Nome = evento.nome,
+                Descricao = evento.descricao,
+                Data = evento.data,
+                Horario = evento.horario,
+                id_local = evento.id_local,
+                id_organizador = evento.id_organizador,
+                Palestrantes = evento.palestrantes_presentes,
+                Participantes = evento.Participantes
+            };
+
+            return Ok(eventoDTO);
         }
 
-        return NoContent();
-    }
-    
-    // apagar evento
-    [HttpDelete("evento/{id}")]
-    public async Task<IActionResult> DeleteEvento(int id)
-    {
-        var evento = await _context.Eventos.FindAsync(id);
-        if (evento == null)
+        // criar evento
+        [HttpPost("eventos")]
+        public async Task<ActionResult<EventoDTO>> PostEvento(EventoDTO eventoDTO)
         {
-            return NotFound();
+            // Verifica se o organizador existe
+            var organizador = await _organizadorRepository.ObterPorIdAsync(eventoDTO.id_organizador);
+
+            if (organizador == null)
+            {
+                return NotFound(new { mensagem = "Organizador não encontrado." });
+            }
+
+            // Convertendo DTO para entidade Evento
+            var evento = new Evento
+            {
+                nome = eventoDTO.Nome,
+                descricao = eventoDTO.Descricao,
+                data = eventoDTO.Data,
+                horario = eventoDTO.Horario,
+                id_local = eventoDTO.id_local,
+                id_organizador = organizador.Id,
+                palestrantes_presentes = new List<int>(),
+                Participantes = new List<int>()
+            };
+
+            await _eventoRepository.AdicionarAsync(evento);
+            
+
+            return Ok("criado com sucesso");
         }
 
-        _context.Eventos.Remove(evento);
-        await _context.SaveChangesAsync();
+        // atualizar evento
+        [HttpPut("evento/{id}")]
+        public async Task<IActionResult> PutEvento(int id, EventoDTO eventoDTO)
+        {
+            if (id != eventoDTO.Id)
+            {
+                return BadRequest();
+            }
 
-        return NoContent();
-    }
+            var eventoExistente = await _eventoRepository.ObterPorIdAsync(id);
+            if (eventoExistente == null)
+            {
+                return NotFound();
+            }
 
-    private bool EventoExists(int id)
-    {
-        return _context.Eventos.Any(e => e.Id == id);
+            // Verifica se o organizador existe
+            var organizador = await _organizadorRepository.ObterPorIdAsync(eventoDTO.id_organizador);
+            if (organizador == null)
+            {
+                return NotFound(new { mensagem = "Organizador não encontrado." });
+            }
+
+            // Atualizando os dados do evento
+            eventoExistente.nome = eventoDTO.Nome;
+            eventoExistente.descricao = eventoDTO.Descricao;
+            eventoExistente.data = eventoDTO.Data;
+            eventoExistente.horario = eventoDTO.Horario;
+            eventoExistente.id_local = eventoDTO.id_local;
+            eventoExistente.id_organizador = organizador.Id;
+
+            await _eventoRepository.AtualizarAsync(eventoExistente);
+
+            return NoContent();
+        }
+
+        // apagar evento
+        [HttpDelete("evento/{id}")]
+        public async Task<IActionResult> DeleteEvento(int id)
+        {
+            var evento = await _eventoRepository.ObterPorIdAsync(id);
+            if (evento == null)
+            {
+                return NotFound();
+            }
+
+            await _eventoRepository.DeletarAsync(id);
+            return NoContent();
+        }
     }
 }

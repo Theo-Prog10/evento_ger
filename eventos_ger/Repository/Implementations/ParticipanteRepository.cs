@@ -39,9 +39,26 @@ public class ParticipanteRepository : IParticipanteRepository
 
     public async Task DeletarAsync(int id)
     {
+        // Busca o participante pelo ID
         var participante = await _context.Participantes.FindAsync(id);
+
         if (participante != null)
         {
+            // Carrega os eventos associados
+            var eventos = await _context.Eventos
+                .Where(e => e.Participantes.Contains(id))
+                .ToListAsync();
+
+            
+            foreach (var evento in eventos)
+            {
+                evento.Participantes.Remove(id);
+            }
+
+            
+            await _context.SaveChangesAsync();
+
+            // Remove o participante do banco de dados
             _context.Participantes.Remove(participante);
             await _context.SaveChangesAsync();
         }

@@ -1,7 +1,5 @@
 ﻿using eventos_ger.Model.DTOs;
 using eventos_ger.Model;
-using eventos_ger.Model.DTOs;
-using eventos_ger.Repository;
 using eventos_ger.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,18 +9,32 @@ namespace eventos_ger.Controller;
 public class ControllerParticipantes : ControllerBase
 {
     private readonly IParticipanteRepository _participanteRepository;
-    private readonly IEventoRepository  _eventoRepository;
+    
 
-    public ControllerParticipantes(IParticipanteRepository participanteRepository)
+    public ControllerParticipantes(IParticipanteRepository participanteRepository, IEventoRepository eventoRepository)
     {
         _participanteRepository = participanteRepository;
     }
 
     // Lista todos os participantes
-    [HttpGet]
+    [HttpGet("participante")]
     public async Task<ActionResult<IEnumerable<ParticipanteDTO>>> GetParticipantes()
     {
-        return Ok(await _participanteRepository.ObterTodosAsync());
+        var participantes = await _participanteRepository.ObterTodosAsync();
+
+        var participantesDTO = participantes.Select(participante => new ParticipanteDTO
+        {
+            Id = participante.Id,
+            Nome = participante.nome,
+            nascimento = participante.nascimento,
+            cpf = participante.cpf,
+            tipo_ingresso = participante.tipo_ingresso,
+            status_inscricao = participante.status_inscricao,
+            // Lista de eventos inscritos vazia, sem busca
+            EventosInscritos = new List<int>()
+        }).ToList();
+
+        return Ok(participantesDTO);
     }
 
     // Busca participante por ID
@@ -41,37 +53,29 @@ public class ControllerParticipantes : ControllerBase
         {
             Id = participante.Id,
             Nome = participante.nome,
-            Nascimento = participante.nascimento,
-            EventosInscritos = participante.Eventos_inscritos
+            nascimento = participante.nascimento,
+            tipo_ingresso = participante.tipo_ingresso,
+            status_inscricao = participante.status_inscricao,
+            // Lista de eventos inscritos vazia, sem busca
+            EventosInscritos = new List<int>()
         };
 
         return Ok(participanteDTO);
     }
 
     // Cria um novo participante
-    [HttpPost]
+    [HttpPost("participante")]
     public async Task<ActionResult> PostParticipante(ParticipanteDTO participanteDTO)
     {
-        // Aqui você converte a lista de nomes para lista de IDs de eventos
-        var eventoIds = new List<int>();
-
-        foreach (var eventoNome in participanteDTO.EventosInscritos)
-        {
-            // busca o ID do evento pelo nome através do repositório
-            var evento = await _eventoRepository.ObterPorNomeAsync(eventoNome);
-
-            if (evento != null)
-            {
-                eventoIds.Add(evento.Id); // Adiciona o ID do evento à lista
-            }
-        }
-
         // Convertendo DTO para entidade
         var participante = new Participante
         {
             nome = participanteDTO.Nome,
-            nascimento = participanteDTO.Nascimento,
-            Eventos_inscritos = eventoIds  // Atribuindo a lista de IDs dos eventos
+            nascimento = participanteDTO.nascimento,
+            tipo_ingresso = participanteDTO.tipo_ingresso,
+            status_inscricao = participanteDTO.status_inscricao,
+            cpf = participanteDTO.cpf,
+            Eventos_inscritos = new List<int>()  // Lista de eventos vazia
         };
 
         await _participanteRepository.AdicionarAsync(participante);
@@ -79,17 +83,16 @@ public class ControllerParticipantes : ControllerBase
         return Ok(new { mensagem = "Participante criado com sucesso." });
     }
 
-
     // Atualiza informações de um participante
-    [HttpPut("{id}")]
+    [HttpPut("participante/{id}")]
     public async Task<IActionResult> PutParticipante(int id, ParticipanteDTO participanteDTO)
     {
         // Convertendo DTO para entidade
         var participante = new Participante
         {
             nome = participanteDTO.Nome,
-            nascimento = participanteDTO.Nascimento,
-            Eventos_inscritos = participanteDTO.EventosInscritos
+            nascimento = participanteDTO.nascimento,
+            Eventos_inscritos = new List<int>()  // Lista de eventos vazia
         };
 
         await _participanteRepository.AtualizarAsync(participante);
@@ -97,7 +100,7 @@ public class ControllerParticipantes : ControllerBase
     }
 
     // Deleta um participante
-    [HttpDelete("{id}")]
+    [HttpDelete("participante/{id}")]
     public async Task<IActionResult> DeleteParticipante(int id)
     {
         await _participanteRepository.DeletarAsync(id);

@@ -16,7 +16,7 @@ Content-Type: application/json
 
 ### criar participante
 
-POST {{eventos_ger_HostAddress}}/participantes
+POST {{eventos_ger_HostAddress}}/participante
 Content-Type: application/json
 
 {
