@@ -18,7 +18,7 @@ public class ControllerOrganizador : ControllerBase
     [HttpGet("/organizadores")]
     public async Task<ActionResult<IEnumerable<Organizador>>> GetOrganizadores()
     {
-        return await _context.Organizadores.Include(p => p.eventos_organizados).ToListAsync();
+        return await _context.Organizadores.ToListAsync();
     }
     
     // Lista organizador por id
@@ -27,7 +27,6 @@ public class ControllerOrganizador : ControllerBase
     {
         // Busca o organizador pelo ID, incluindo os eventos organizados
         var organizador = await _context.Organizadores
-            .Include(o => o.eventos_organizados) // Inclui eventos organizados
             .FirstOrDefaultAsync(o => o.Id == id);
 
         if (organizador == null)

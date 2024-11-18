@@ -14,4 +14,21 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Model\DTO\EventoDTO.cs" />
+      <Compile Remove="Model\DTO\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Model\DTO\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="Model\DTO\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Model\DTO\**" />
+    </ItemGroup>
+
 </Project>

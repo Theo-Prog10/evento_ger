@@ -19,8 +19,6 @@ public class EventoController : ControllerBase
     public async Task<ActionResult<IEnumerable<Evento>>> GetEventos()
     {
         return await _context.Eventos
-            .Include(e => e.Participantes)
-            .Include(e => e.palestrantes_presentes)
             .ToListAsync();
     }
 
@@ -29,8 +27,6 @@ public class EventoController : ControllerBase
     public async Task<ActionResult<Evento>> GetEvento(int id)
     {
         var evento = await _context.Eventos
-            .Include(e => e.Participantes)
-            .Include(e => e.palestrantes_presentes)
             .FirstOrDefaultAsync(e => e.Id == id);
 
         if (evento == null)
@@ -48,7 +44,6 @@ public class EventoController : ControllerBase
 
         // Verifica se o organizador associado existe no banco de dados
         var organizador = await _context.Organizadores
-            .Include(o => o.eventos_organizados) // Inclui os eventos organizados
             .FirstOrDefaultAsync(o => o.Id == evento.id_organizador);
 
         if (organizador == null)
@@ -60,7 +55,7 @@ public class EventoController : ControllerBase
         _context.Eventos.Add(evento);
         
         // Adiciona evento ao organizador
-        organizador.eventos_organizados.Add(evento);
+        organizador.eventos_organizados.Add(evento.Id);
 
         // Salva as alterações no banco de dados
         await _context.SaveChangesAsync();

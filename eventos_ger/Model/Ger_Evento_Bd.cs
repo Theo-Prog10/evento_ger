@@ -14,17 +14,5 @@ public class Ger_Evento_Bd : DbContext
     public DbSet<Organizador> Organizadores { get; set; }
     public DbSet<Palestrante> Palestrantes { get; set; }
     public DbSet<Participante> Participantes { get; set; }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        // Relacionamento Evento-Palestrante (muitos-para-muitos)
-        modelBuilder.Entity<Evento>()
-            .HasMany(e => e.palestrantes_presentes)
-            .WithMany(p => p.palestras_ministradas);
-
-        // Relacionamento Evento-Participante (muitos-para-muitos)
-        modelBuilder.Entity<Evento>()
-            .HasMany(e => e.Participantes)
-            .WithMany(p => p.Eventos_inscritos);
-    }
+    
 }

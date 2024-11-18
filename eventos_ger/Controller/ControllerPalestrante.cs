@@ -18,7 +18,7 @@ public class ControllerPalestrantes : ControllerBase
     [HttpGet("/palestrantes")]
     public async Task<ActionResult<IEnumerable<Palestrante>>> GetPalestrantes()
     {
-        return await _context.Palestrantes.Include(p => p.palestras_ministradas).ToListAsync();
+        return await _context.Palestrantes.ToListAsync();
     }
     
     // Lista palestrante por id
@@ -27,7 +27,6 @@ public class ControllerPalestrantes : ControllerBase
     {
         // Busca o palestrante pelo ID, incluindo palestras_ministradas
         var palestrante = await _context.Palestrantes
-            .Include(p => p.palestras_ministradas) // Inclui palestras_ministradas
             .FirstOrDefaultAsync(p => p.Id == id);
 
         if (palestrante == null)

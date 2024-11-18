@@ -7,5 +7,5 @@ public class Organizador
     public string? nascimento { get; set; }
     public string? cpf { get; set; }
     public string? contato { get; set; }
-    public List<Evento>? eventos_organizados { get; set; } = new();
+    public List<int> eventos_organizados { get; set; } = new();
 }

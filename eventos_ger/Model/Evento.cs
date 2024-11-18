@@ -10,8 +10,8 @@ public class Evento
     public int id_local { get; set; }
     public int id_organizador { get; set; }
     
-    public List<Palestrante>? palestrantes_presentes { get; set; } = new();
-    public List<Participante>? Participantes { get; set; } = new();
+    public List<int> palestrantes_presentes { get; set; } = new();
+    public List<int> Participantes { get; set; } = new();
     
     
 }

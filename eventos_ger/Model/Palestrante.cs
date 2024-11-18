@@ -8,5 +8,5 @@ public class Palestrante
     public string? cpf { get; set; }
     public string? biografia { get; set; }
     public string? especialidade { get; set; }
-    public List<Evento>? palestras_ministradas { get; set; } = new();
+    public List<int> palestras_ministradas { get; set; } = new();
 }

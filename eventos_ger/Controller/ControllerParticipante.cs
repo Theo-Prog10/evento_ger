@@ -18,7 +18,7 @@ public class ControllerParticipantes : ControllerBase
     [HttpGet("/participantes")]
     public async Task<ActionResult<IEnumerable<Participante>>> GetParticipantes()
     {
-        return await _context.Participantes.Include(p => p.Eventos_inscritos).ToListAsync();
+        return await _context.Participantes.ToListAsync();
     }
     
     // Lista participante por id
@@ -27,7 +27,6 @@ public class ControllerParticipantes : ControllerBase
     {
         // Busca o participante pelo ID, incluindo Eventos_inscritos
         var participante = await _context.Participantes
-            .Include(p => p.Eventos_inscritos) // Inclui Eventos_inscritos
             .FirstOrDefaultAsync(p => p.Id == id);
 
         if (participante == null)
@@ -83,12 +82,11 @@ public class ControllerParticipantes : ControllerBase
     public async Task<IActionResult> DeleteEvento(int participanteId, int eventoId)
     {
         var evento = await _context.Eventos
-            .Include(e => e.Participantes)
             .FirstOrDefaultAsync(e => e.Id == eventoId);
 
         if (evento == null) return NotFound();
 
-        var participante = evento.Participantes.FirstOrDefault(p => p.Id == participanteId);
+        var participante = evento.Participantes.FirstOrDefault(p => p == participanteId);
         if (participante == null) return NotFound();
 
         evento.Participantes.Remove(participante);
