@@ -1,80 +1,85 @@
 ﻿using eventos_ger.Model;
-
-namespace eventos_ger.Controller;
-using Microsoft.EntityFrameworkCore;
+using eventos_ger.Model.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using eventos_ger.Repository.Interfaces;
 
 [ApiController]
-public class ControllerPalestrantes : ControllerBase
+public class ControllerPalestrante : ControllerBase
 {
-    private readonly Ger_Evento_Bd _context;
+    private readonly IPalestranteRepository _palestranteRepository;
 
-    public ControllerPalestrantes(Ger_Evento_Bd context)
+    public ControllerPalestrante(IPalestranteRepository palestranteRepository)
     {
-        _context = context;
+        _palestranteRepository = palestranteRepository;
     }
-    
-    // lista palestrantes
-    [HttpGet("/palestrantes")]
-    public async Task<ActionResult<IEnumerable<Palestrante>>> GetPalestrantes()
-    {
-        return await _context.Palestrantes.ToListAsync();
-    }
-    
-    // Lista palestrante por id
-    [HttpGet("/palestrante/{id}")]
-    public async Task<ActionResult<Organizador>> GetPalestrante(int id)
-    {
-        // Busca o palestrante pelo ID, incluindo palestras_ministradas
-        var palestrante = await _context.Palestrantes
-            .FirstOrDefaultAsync(p => p.Id == id);
 
-        if (palestrante == null)
+    [HttpGet("api/palestrantes")]
+    public async Task<ActionResult<IEnumerable<PalestranteDTO>>> GetPalestrantes()
+    {
+        return Ok(await _palestranteRepository.ObterTodosAsync());
+    }
+
+    [HttpGet("api/palestrantes/{id}")]
+    public async Task<ActionResult<PalestranteDTO>> GetPalestrante(int id)
+    {
+        var palestrante = await _palestranteRepository.ObterPorIdAsync(id);
+        
+        if (palestrante == null) return 
+            NotFound(new { mensagem = "Palestrante não encontrado." });
+
+        // Convertendo Palestrante para PalestranteDTO
+        var palestranteDTO = new PalestranteDTO
         {
-            return NotFound(new { mensagem = "Palestrante não encontrado." });
-        }
+            Nome = palestrante.nome,
+            Biografia = palestrante.biografia,
+            Especialidade = palestrante.especialidade
+        };
 
-        return Ok(palestrante);
+        return Ok(palestranteDTO);
     }
-    
-    // cria palestrante
-    [HttpPost("palestrantes")]
-    public async Task<ActionResult<Palestrante>> PostPalestrante(Palestrante palestrante)
-    {
-        _context.Palestrantes.Add(palestrante);
-        await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetPalestrantes), new { id = palestrante.Id }, palestrante);
+    [HttpPost("/palestrantes")]
+    public async Task<ActionResult<PalestranteDTO>> PostPalestrante(PalestranteDTO palestranteDTO)
+    {
+        // Convertendo PalestranteDTO para entidade Palestrante
+        var palestrante = new Palestrante
+        {
+            nome = palestranteDTO.Nome,
+            biografia = palestranteDTO.Biografia,
+            especialidade = palestranteDTO.Especialidade
+        };
+        
+        var novoPalestrante = await _palestranteRepository.AdicionarAsync(palestrante);
+        
+
+        return Ok("adicionado");
     }
-    
-    // atualiza palestrante por id
-    [HttpPut("palaestrante/{id}")]
-    public async Task<IActionResult> PutPalestrante(int id, Palestrante inputPalestrante)
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutPalestrante(int id, PalestranteDTO inputPalestranteDTO)
     {
-        var palestrante = await _context.Palestrantes.FindAsync(id);
-        if (palestrante == null) return NotFound();
+        if (!await _palestranteRepository.ExisteAsync(id)) return NotFound();
 
-        palestrante.nome = inputPalestrante.nome;
-        palestrante.nascimento = inputPalestrante.nascimento;
-        palestrante.cpf = inputPalestrante.cpf;
-        palestrante.biografia = inputPalestrante.biografia;
-        palestrante.especialidade = inputPalestrante.especialidade;
+        // Convertendo DTO para entidade
+        var palestrante = new Palestrante
+        {
+            Id = id,
+            nome = inputPalestranteDTO.Nome,
+            biografia = inputPalestranteDTO.Biografia,
+            especialidade = inputPalestranteDTO.Especialidade
+        };
 
-        await _context.SaveChangesAsync();
+        await _palestranteRepository.AtualizarAsync(palestrante);
 
         return NoContent();
     }
-    
-    // apaga palestrante
-    [HttpDelete("palestrante/{participanteId}")]
-    public async Task<IActionResult> DeletePalestrnate(int palestranteId)
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletePalestrante(int id)
     {
-        var palestrante = await _context.Participantes.FindAsync(palestranteId);
-        if (palestrante == null) return NotFound();
+        if (!await _palestranteRepository.ExisteAsync(id)) return NotFound();
 
-        _context.Participantes.Remove(palestrante);
-        await _context.SaveChangesAsync();
-
+        await _palestranteRepository.DeletarAsync(id);
         return NoContent();
     }
 }
