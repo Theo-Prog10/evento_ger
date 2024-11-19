@@ -61,7 +61,7 @@ Content-Type: application/json
   "nome": "Insensivão Python",
   "descricao": "Aula interativa de 4h de python",
   "data": "30/11/2024",
-  "hora": "15:00",
+  "horario": "15:00",
   "id_local": 1,
   "id_organizador": 1
 }

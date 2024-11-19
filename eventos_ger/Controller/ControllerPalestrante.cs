@@ -24,7 +24,7 @@ public class ControllerPalestrante : ControllerBase
             Nome = palestrante.nome,
             Biografia = palestrante.biografia,
             Especialidade = palestrante.especialidade,
-            cpf = palestrante.cpf,
+            Cpf = palestrante.cpf,
             Nascimento = palestrante.nascimento,
             PalestrasMinistradas = palestrante.palestras_ministradas 
         }).ToList();
@@ -33,7 +33,7 @@ public class ControllerPalestrante : ControllerBase
     }
 
     // Busca palestrante por ID
-    [HttpGet("api/palestrantes/{id}")]
+    [HttpGet("palestrante/{id}")]
     public async Task<ActionResult<PalestranteDTO>> GetPalestrante(int id)
     {
         var palestrante = await _palestranteRepository.ObterPorIdAsync(id);
@@ -47,9 +47,9 @@ public class ControllerPalestrante : ControllerBase
             Nome = palestrante.nome,
             Biografia = palestrante.biografia,
             Especialidade = palestrante.especialidade,
-            cpf = palestrante.cpf,
+            Cpf = palestrante.cpf,
             Nascimento = palestrante.nascimento,
-            PalestrasMinistradas = new List<int>() // Apenas deixa vazio sem a parte dos eventos
+            PalestrasMinistradas = palestrante.palestras_ministradas 
         };
 
         return Ok(palestranteDTO);
@@ -65,7 +65,7 @@ public class ControllerPalestrante : ControllerBase
             nome = palestranteDTO.Nome,
             biografia = palestranteDTO.Biografia,
             especialidade = palestranteDTO.Especialidade,
-            cpf = palestranteDTO.cpf,
+            cpf = palestranteDTO.Cpf,
             nascimento = palestranteDTO.Nascimento,
             palestras_ministradas = new List<int>()
             

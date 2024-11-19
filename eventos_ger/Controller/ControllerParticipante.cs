@@ -17,7 +17,7 @@ public class ControllerParticipantes : ControllerBase
     }
 
     // Lista todos os participantes
-    [HttpGet("participante")]
+    [HttpGet("participantes")]
     public async Task<ActionResult<IEnumerable<ParticipanteDTO>>> GetParticipantes()
     {
         var participantes = await _participanteRepository.ObterTodosAsync();
@@ -26,12 +26,11 @@ public class ControllerParticipantes : ControllerBase
         {
             Id = participante.Id,
             Nome = participante.nome,
-            nascimento = participante.nascimento,
-            cpf = participante.cpf,
-            tipo_ingresso = participante.tipo_ingresso,
-            status_inscricao = participante.status_inscricao,
-            // Lista de eventos inscritos vazia, sem busca
-            EventosInscritos = new List<int>()
+            Nascimento = participante.nascimento,
+            Cpf = participante.cpf,
+            Tipo_ingresso = participante.tipo_ingresso,
+            Status_inscricao = participante.status_inscricao,
+            EventosInscritos = participante.eventosInscritos
         }).ToList();
 
         return Ok(participantesDTO);
@@ -53,11 +52,10 @@ public class ControllerParticipantes : ControllerBase
         {
             Id = participante.Id,
             Nome = participante.nome,
-            nascimento = participante.nascimento,
-            tipo_ingresso = participante.tipo_ingresso,
-            status_inscricao = participante.status_inscricao,
-            // Lista de eventos inscritos vazia, sem busca
-            EventosInscritos = new List<int>()
+            Nascimento = participante.nascimento,
+            Tipo_ingresso = participante.tipo_ingresso,
+            Status_inscricao = participante.status_inscricao,
+            EventosInscritos = participante.eventosInscritos
         };
 
         return Ok(participanteDTO);
@@ -71,11 +69,11 @@ public class ControllerParticipantes : ControllerBase
         var participante = new Participante
         {
             nome = participanteDTO.Nome,
-            nascimento = participanteDTO.nascimento,
-            tipo_ingresso = participanteDTO.tipo_ingresso,
-            status_inscricao = participanteDTO.status_inscricao,
-            cpf = participanteDTO.cpf,
-            Eventos_inscritos = new List<int>()  // Lista de eventos vazia
+            nascimento = participanteDTO.Nascimento,
+            tipo_ingresso = participanteDTO.Tipo_ingresso,
+            status_inscricao = participanteDTO.Status_inscricao,
+            cpf = participanteDTO.Cpf,
+            eventosInscritos = new List<int>()  // Lista de eventos vazia
         };
 
         await _participanteRepository.AdicionarAsync(participante);
@@ -91,8 +89,8 @@ public class ControllerParticipantes : ControllerBase
         var participante = new Participante
         {
             nome = participanteDTO.Nome,
-            nascimento = participanteDTO.nascimento,
-            Eventos_inscritos = new List<int>()  // Lista de eventos vazia
+            nascimento = participanteDTO.Nascimento,
+            eventosInscritos = new List<int>()  // Lista de eventos vazia
         };
 
         await _participanteRepository.AtualizarAsync(participante);
@@ -103,6 +101,7 @@ public class ControllerParticipantes : ControllerBase
     [HttpDelete("participante/{id}")]
     public async Task<IActionResult> DeleteParticipante(int id)
     {
+        if (!await _participanteRepository.ExisteAsync(id)) return NotFound();
         await _participanteRepository.DeletarAsync(id);
         return NoContent();
     }

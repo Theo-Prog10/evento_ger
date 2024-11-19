@@ -35,7 +35,7 @@ public class ControllerInscricao : ControllerBase
         
         // Adicionar o participante ao evento e vice-versa
         evento.Participantes.Add(participante.Id);
-        participante.Eventos_inscritos.Add(evento.Id);
+        participante.eventosInscritos.Add(evento.Id);
 
         await _context.SaveChangesAsync();
         return Ok("participante adicionado");
@@ -81,7 +81,7 @@ public class ControllerInscricao : ControllerBase
         if (participante == null) return NotFound($"Participante com ID {participanteId} não encontrado.");
 
         evento.Participantes.Remove(participante.Id);
-        participante.Eventos_inscritos.Remove(evento.Id);
+        participante.eventosInscritos.Remove(evento.Id);
 
         await _context.SaveChangesAsync();
 

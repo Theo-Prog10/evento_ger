@@ -93,7 +93,10 @@ namespace eventos_ger.Controller
 
             await _eventoRepository.AdicionarAsync(evento);
             
-
+            organizador.EventosOrganizados.Add(evento.Id);
+            
+            await _organizadorRepository.AtualizarAsync(organizador);
+            
             return Ok("criado com sucesso");
         }
 

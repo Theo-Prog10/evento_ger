@@ -28,6 +28,8 @@ public class OrganizadorController : ControllerBase
             {
                 Id = o.Id,
                 Nome = o.nome,
+                Nascimento = o.nascimento,
+                Cpf = o.cpf,
                 Contato = o.contato,
                 EventosOrganizados = o.EventosOrganizados
             }).ToList();
@@ -36,7 +38,7 @@ public class OrganizadorController : ControllerBase
         }
 
         // Obter organizador por id
-        [HttpGet("organizadores/{id}")]
+        [HttpGet("organizador/{id}")]
         public async Task<ActionResult<OrganizadorDTO>> GetOrganizador(int id)
         {
             var organizador = await _organizadorRepository.ObterPorIdAsync(id);
@@ -49,6 +51,8 @@ public class OrganizadorController : ControllerBase
             {
                 Id = organizador.Id,
                 Nome = organizador.nome,
+                Nascimento = organizador.nascimento,
+                Cpf = organizador.cpf,
                 Contato = organizador.contato,
                 EventosOrganizados = organizador.EventosOrganizados
             };
@@ -63,6 +67,8 @@ public class OrganizadorController : ControllerBase
             var organizador = new Organizador
             {
                 nome = organizadorDTO.Nome,
+                nascimento = organizadorDTO.Nascimento,
+                cpf = organizadorDTO.Cpf,
                 contato = organizadorDTO.Contato,
                 EventosOrganizados = organizadorDTO.EventosOrganizados
             };
@@ -73,7 +79,7 @@ public class OrganizadorController : ControllerBase
         }
 
         // Atualizar organizador
-        [HttpPut("organizadores/{id}")]
+        [HttpPut("organizador/{id}")]
         public async Task<IActionResult> PutOrganizador(int id, OrganizadorDTO organizadorDTO)
         {
             if (id != organizadorDTO.Id)
@@ -90,6 +96,8 @@ public class OrganizadorController : ControllerBase
             // Atualizando os dados do organizador
             organizadorExistente.nome = organizadorDTO.Nome;
             organizadorExistente.contato = organizadorDTO.Contato;
+            organizadorExistente.cpf = organizadorDTO.Cpf;
+            organizadorExistente.nascimento = organizadorDTO.Nascimento;
 
             await _organizadorRepository.AtualizarAsync(organizadorExistente);
 
@@ -97,7 +105,7 @@ public class OrganizadorController : ControllerBase
         }
 
         // Deletar organizador
-        [HttpDelete("organizadores/{id}")]
+        [HttpDelete("organizador/{id}")]
         public async Task<IActionResult> DeleteOrganizador(int id)
         {
             try

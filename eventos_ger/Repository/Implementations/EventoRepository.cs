@@ -55,12 +55,12 @@ public class EventoRepository : IEventoRepository
 
             // Remover o evento das listas de eventos de participantes
             var participantes = await _context.Participantes
-                .Where(p => p.Eventos_inscritos.Contains(id)) 
+                .Where(p => p.eventosInscritos.Contains(id)) 
                 .ToListAsync();
         
             foreach (var participante in participantes)
             {
-                participante.Eventos_inscritos.Remove(id); 
+                participante.eventosInscritos.Remove(id); 
             }
 
             
