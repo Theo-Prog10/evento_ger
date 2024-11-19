@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using eventos_ger.Model;
 using eventos_ger.Model.DTOs;
 using eventos_ger.Repository.Interfaces;
 

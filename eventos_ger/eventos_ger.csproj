@@ -18,8 +18,6 @@
     <ItemGroup>
       <Compile Remove="Model\DTO\EventoDTO.cs" />
       <Compile Remove="Model\DTO\**" />
-      <Compile Remove="Repository\Interfaces\IInscricaoRepository.cs" />
-      <Compile Remove="Repository\Implementations\InscricaoRepository.cs" />
     </ItemGroup>
 
     <ItemGroup>

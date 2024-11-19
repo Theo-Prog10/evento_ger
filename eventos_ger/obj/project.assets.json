@@ -2340,19 +2340,20 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\edudu\\.nuget\\packages\\": {}
+    "C:\\Users\\20221bsi0250\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\edudu\\RiderProjects\\evento_ger\\eventos_ger\\eventos_ger.csproj",
+      "projectUniqueName": "C:\\Users\\20221bsi0250\\RiderProjects\\evento_ger\\eventos_ger\\eventos_ger.csproj",
       "projectName": "eventos_ger",
-      "projectPath": "C:\\Users\\edudu\\RiderProjects\\evento_ger\\eventos_ger\\eventos_ger.csproj",
-      "packagesPath": "C:\\Users\\edudu\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\edudu\\RiderProjects\\evento_ger\\eventos_ger\\obj\\",
+      "projectPath": "C:\\Users\\20221bsi0250\\RiderProjects\\evento_ger\\eventos_ger\\eventos_ger.csproj",
+      "packagesPath": "C:\\Users\\20221bsi0250\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\20221bsi0250\\RiderProjects\\evento_ger\\eventos_ger\\obj\\",
       "projectStyle": "PackageReference",
+      "UsingMicrosoftNETSdk": false,
       "configFilePaths": [
-        "C:\\Users\\edudu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\20221bsi0250\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -2427,7 +2428,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.404/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
       }
     }
   },
