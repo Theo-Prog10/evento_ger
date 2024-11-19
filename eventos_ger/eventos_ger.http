@@ -72,7 +72,7 @@ POST {{eventos_ger_HostAddress}}/evento/1/participantes/1
 
 ### adiciona palestrante
 
-POST {{eventos_ger_HostAddress}}/evento/1/palestrantes/1
+POST {{eventos_ger_HostAddress}}/evento/1/palestrantes/3
 
 ### remove participante
 

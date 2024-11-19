@@ -15,17 +15,17 @@ public class InscricaoRepository : IInscricaoRepository
         _context = context;
     }
 
-    public async Task<Evento> AddParticipanteAsync(int eventoId, int participanteId)
+    public async Task<Evento> AddParticipante(int eventoId, int participanteId)
     {
         // Buscar o evento
-        var evento = await _context.Eventos
-            .FirstOrDefaultAsync(e => e.Id == eventoId);
+        var evento = _context.Eventos
+            .FirstOrDefault(e => e.Id == eventoId);
 
         if (evento == null) throw new ArgumentException($"Evento com ID {eventoId} não encontrado.");
 
         // Buscar o participante
-        var participante = await _context.Participantes
-            .FirstOrDefaultAsync(p => p.Id == participanteId);
+        var participante = _context.Participantes
+            .FirstOrDefault(p => p.Id == participanteId);
 
         if (participante == null) throw new ArgumentException($"Participante com ID {participanteId} não encontrado.");
         if (evento.Participantes.Contains(participante.Id))
@@ -36,24 +36,24 @@ public class InscricaoRepository : IInscricaoRepository
         participante.eventosInscritos.Add(evento.Id);
 
         // Salvar as mudanças
-        await _context.SaveChangesAsync();
+        _context.SaveChanges();
 
         return evento;
     }
 
 
-    public async Task<Evento> AddPalestranteAsync(int eventoId, int palestranteId)
+    public async Task<Evento> AddPalestrante(int eventoId, int palestranteId)
     {
         // Buscar o evento
-        var evento = await _context.Eventos
-            .FirstOrDefaultAsync(e => e.Id == eventoId);
+        var evento = _context.Eventos
+            .FirstOrDefault(e => e.Id == eventoId);
 
         if (evento == null)
             throw new ArgumentException($"Evento com ID {eventoId} não encontrado.");
 
         // Buscar o palestrante
-        var palestrante = await _context.Palestrantes
-            .FirstOrDefaultAsync(p => p.Id == palestranteId);
+        var palestrante = _context.Palestrantes
+            .FirstOrDefault(p => p.Id == palestranteId);
 
         if (palestrante == null)
             throw new ArgumentException($"Palestrante com ID {palestranteId} não encontrado.");
@@ -67,25 +67,25 @@ public class InscricaoRepository : IInscricaoRepository
         palestrante.palestras_ministradas.Add(evento.Id);
 
         // Salvar as mudanças
-        await _context.SaveChangesAsync();
+        _context.SaveChanges();
 
         // Retornar o evento atualizado
         return evento;
     }
 
 
-    public async Task DeleteParticipanteEventoAsync(int participanteId, int eventoId)
+    public async Task DeleteParticipanteEvento(int participanteId, int eventoId)
     {
         // Buscar o evento
-        var evento = await _context.Eventos
-            .FirstOrDefaultAsync(e => e.Id == eventoId);
+        var evento = _context.Eventos
+            .FirstOrDefault(e => e.Id == eventoId);
 
         if (evento == null)
             throw new ArgumentException($"Evento com ID {eventoId} não encontrado.");
 
         // Buscar o participante
-        var participante = await _context.Participantes
-            .FirstOrDefaultAsync(p => p.Id == participanteId);
+        var participante = _context.Participantes
+            .FirstOrDefault(p => p.Id == participanteId);
 
         if (participante == null)
             throw new ArgumentException($"Participante com ID {participanteId} não encontrado.");
@@ -100,21 +100,21 @@ public class InscricaoRepository : IInscricaoRepository
         participante.eventosInscritos.Remove(evento.Id);
 
         // Salvar as alterações
-        await _context.SaveChangesAsync();
+        _context.SaveChanges();
     }
 
-    public async Task DeletePalestranteEventoAsync(int palestranteId, int eventoId)
+    public async Task DeletePalestranteEvento(int palestranteId, int eventoId)
     {
         // Buscar o evento
-        var evento = await _context.Eventos
-            .FirstOrDefaultAsync(e => e.Id == eventoId);
+        var evento = _context.Eventos
+            .FirstOrDefault(e => e.Id == eventoId);
 
         if (evento == null)
             throw new ArgumentException($"Evento com ID {eventoId} não encontrado.");
 
         // Buscar o palestrante
-        var palestrante = await _context.Palestrantes
-            .FirstOrDefaultAsync(p => p.Id == palestranteId);
+        var palestrante = _context.Palestrantes
+            .FirstOrDefault(p => p.Id == palestranteId);
 
         if (palestrante == null)
             throw new ArgumentException($"Palestrante com ID {palestranteId} não encontrado.");
@@ -129,6 +129,6 @@ public class InscricaoRepository : IInscricaoRepository
         palestrante.palestras_ministradas.Remove(evento.Id);
 
         // Salvar as alterações
-        await _context.SaveChangesAsync();
+        _context.SaveChanges();
     }
 }

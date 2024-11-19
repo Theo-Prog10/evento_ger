@@ -1,28 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\20221bsi0250\\RiderProjects\\evento_ger\\eventos_ger\\eventos_ger.csproj": {}
+    "C:\\Users\\20221BSI0145\\RiderProjects\\evento_ger\\eventos_ger\\eventos_ger.csproj": {}
   },
   "projects": {
-    "C:\\Users\\20221bsi0250\\RiderProjects\\evento_ger\\eventos_ger\\eventos_ger.csproj": {
+    "C:\\Users\\20221BSI0145\\RiderProjects\\evento_ger\\eventos_ger\\eventos_ger.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\20221bsi0250\\RiderProjects\\evento_ger\\eventos_ger\\eventos_ger.csproj",
+        "projectUniqueName": "C:\\Users\\20221BSI0145\\RiderProjects\\evento_ger\\eventos_ger\\eventos_ger.csproj",
         "projectName": "eventos_ger",
-        "projectPath": "C:\\Users\\20221bsi0250\\RiderProjects\\evento_ger\\eventos_ger\\eventos_ger.csproj",
-        "packagesPath": "C:\\Users\\20221bsi0250\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\20221bsi0250\\RiderProjects\\evento_ger\\eventos_ger\\obj\\",
+        "projectPath": "C:\\Users\\20221BSI0145\\RiderProjects\\evento_ger\\eventos_ger\\eventos_ger.csproj",
+        "packagesPath": "C:\\Users\\20221BSI0145\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\20221BSI0145\\RiderProjects\\evento_ger\\eventos_ger\\obj\\",
         "projectStyle": "PackageReference",
-        "UsingMicrosoftNETSdk": false,
         "configFilePaths": [
-          "C:\\Users\\20221bsi0250\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\20221BSI0145\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -90,7 +87,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Users\\20221BSI0145\\.dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
