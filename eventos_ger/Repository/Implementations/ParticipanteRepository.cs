@@ -44,17 +44,11 @@ public class ParticipanteRepository : IParticipanteRepository
 
         if (participante != null)
         {
-            // Carrega os eventos associados
-            var eventos = await _context.Eventos
-                .Where(e => e.Participantes.Contains(id))
+            var associacoes = await _context.Associacoes
+                .Where(a => a.Id == participante.Id && a.tipo_pessoa == "Participante")
                 .ToListAsync();
-
-            
-            foreach (var evento in eventos)
-            {
-                evento.Participantes.Remove(id);
-            }
-
+                
+            _context.Associacoes.RemoveRange(associacoes);
             
             await _context.SaveChangesAsync();
 

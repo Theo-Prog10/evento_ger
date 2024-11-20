@@ -41,17 +41,12 @@ public class PalestranteRepository : IPalestranteRepository
 
             if (palestrante != null)
             {
-                // Carrega os eventos associados ao palestrante
-                var eventos = await _context.Eventos
-                    .Where(e => e.palestrantes_presentes.Contains(id))
+                var associacoes = await _context.Associacoes
+                    .Where(a => a.Id == palestrante.Id && a.tipo_pessoa == "Palestrante")
                     .ToListAsync();
-
-                // Remove o ID do palestrante das listas de palestrantes dos eventos
-                foreach (var evento in eventos)
-                {
-                    evento.palestrantes_presentes.Remove(id);
-                }
-
+                
+                _context.Associacoes.RemoveRange(associacoes);
+                
                 // Salva as alterações nos eventos
                 await _context.SaveChangesAsync();
 

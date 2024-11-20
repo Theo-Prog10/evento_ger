@@ -43,26 +43,13 @@ public class EventoRepository : IEventoRepository
         var evento = await _context.Eventos.FindAsync(id);
         if (evento != null)
         {
-            // Remover o evento das listas de eventos de palestrantes
-            var palestrantes = await _context.Palestrantes
-                .Where(p => p.palestras_ministradas.Contains(id)) 
+            
+            // Remover associacao
+            var associacoes = await _context.Associacoes
+                .Where(a => a.idEvento == id)
                 .ToListAsync();
-        
-            foreach (var palestrante in palestrantes)
-            {
-                palestrante.palestras_ministradas.Remove(id); 
-            }
-
-            // Remover o evento das listas de eventos de participantes
-            var participantes = await _context.Participantes
-                .Where(p => p.eventosInscritos.Contains(id)) 
-                .ToListAsync();
-        
-            foreach (var participante in participantes)
-            {
-                participante.eventosInscritos.Remove(id); 
-            }
-
+            
+            _context.Associacoes.RemoveRange(associacoes);
             
             _context.Eventos.Remove(evento);
             await _context.SaveChangesAsync();

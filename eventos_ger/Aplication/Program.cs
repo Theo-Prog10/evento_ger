@@ -17,12 +17,9 @@ builder.Services.AddScoped<IPalestranteRepository, PalestranteRepository>();
 builder.Services.AddScoped<IOrganizadorRepository, OrganizadorRepository>();
 builder.Services.AddScoped<ILocalRepository, LocalRepository>();
 builder.Services.AddScoped<IInscricaoRepository, InscricaoRepository>();
-builder.Services.AddControllers();
+builder.Services.AddScoped<IAssociacaoEventoPessoa, AssociacaoEventoPessoaRepository>();
 
     // Registra outros serviços
-builder.Services.AddControllers();
-
-
 builder.Services.AddControllers();
 var app = builder.Build();
 app.MapControllers();

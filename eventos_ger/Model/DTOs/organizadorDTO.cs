@@ -4,6 +4,6 @@
 public class OrganizadorDTO : pessoaDTO
 {
     public string? Contato { get; set; } 
-    public List<int> EventosOrganizados { get; set; } = new();
+    public List<int> EventosOrganizados { get; set; }
 }
 

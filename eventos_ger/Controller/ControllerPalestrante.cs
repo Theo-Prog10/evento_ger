@@ -7,10 +7,12 @@ using eventos_ger.Repository.Interfaces;
 public class ControllerPalestrante : ControllerBase
 {
     private readonly IPalestranteRepository _palestranteRepository;
+    private readonly IAssociacaoEventoPessoa _associacaoEventoPessoa;
 
-    public ControllerPalestrante(IPalestranteRepository palestranteRepository)
+    public ControllerPalestrante(IPalestranteRepository palestranteRepository, IAssociacaoEventoPessoa associacaoEventoPessoa)
     {
         _palestranteRepository = palestranteRepository;
+        _associacaoEventoPessoa = associacaoEventoPessoa;
     }
 
     // Lista todos os palestrantes
@@ -25,9 +27,13 @@ public class ControllerPalestrante : ControllerBase
             Biografia = palestrante.biografia,
             Especialidade = palestrante.especialidade,
             Cpf = palestrante.cpf,
-            Nascimento = palestrante.nascimento,
-            PalestrasMinistradas = palestrante.palestras_ministradas 
+            Nascimento = palestrante.nascimento
         }).ToList();
+        
+        foreach (PalestranteDTO palestrante in palestrantesDTO)
+        {
+            palestrante.PalestrasMinistradas = await _associacaoEventoPessoa.ObterEventosAsync(palestrante.Id, "Palestrante");
+        }
 
         return Ok(palestrantesDTO);
     }
@@ -48,9 +54,10 @@ public class ControllerPalestrante : ControllerBase
             Biografia = palestrante.biografia,
             Especialidade = palestrante.especialidade,
             Cpf = palestrante.cpf,
-            Nascimento = palestrante.nascimento,
-            PalestrasMinistradas = palestrante.palestras_ministradas 
+            Nascimento = palestrante.nascimento
         };
+        
+        palestranteDTO.PalestrasMinistradas = await _associacaoEventoPessoa.ObterEventosAsync(palestranteDTO.Id, "Palestrante");
 
         return Ok(palestranteDTO);
     }
@@ -66,12 +73,11 @@ public class ControllerPalestrante : ControllerBase
             biografia = palestranteDTO.Biografia,
             especialidade = palestranteDTO.Especialidade,
             cpf = palestranteDTO.Cpf,
-            nascimento = palestranteDTO.Nascimento,
-            palestras_ministradas = new List<int>()
+            nascimento = palestranteDTO.Nascimento
             
         };
         
-        var novoPalestrante = await _palestranteRepository.AdicionarAsync(palestrante);
+        await _palestranteRepository.AdicionarAsync(palestrante);
 
         return Ok("Palestrante adicionado com sucesso.");
     }

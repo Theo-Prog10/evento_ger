@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using eventos_ger.Model;
+using Microsoft.AspNetCore.Mvc;
 using eventos_ger.Model.DTOs;
 using eventos_ger.Repository.Interfaces;
 
@@ -9,11 +10,13 @@ namespace eventos_ger.Controller
     {
         private readonly IEventoRepository _eventoRepository;
         private readonly IOrganizadorRepository _organizadorRepository;
+        private readonly IAssociacaoEventoPessoa _associacaoEventoPessoa;
 
-        public EventoController(IEventoRepository eventoRepository, IOrganizadorRepository organizadorRepository)
+        public EventoController(IEventoRepository eventoRepository, IOrganizadorRepository organizadorRepository, IAssociacaoEventoPessoa associacaoEventoPessoa)
         {
             _eventoRepository = eventoRepository;
             _organizadorRepository = organizadorRepository;
+            _associacaoEventoPessoa = associacaoEventoPessoa;
         }
 
         // listar eventos
@@ -30,10 +33,14 @@ namespace eventos_ger.Controller
                 Data = e.data,
                 Horario = e.horario,
                 id_local = e.id_local,
-                id_organizador = e.id_organizador,
-                Palestrantes = e.palestrantes_presentes,
-                Participantes = e.Participantes
+                id_organizador = e.id_organizador
             }).ToList();
+            
+            foreach (EventoDTO evento in eventosDTO)
+            {
+                evento.Participantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Participante");
+                evento.Palestrantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Palestrante");
+            }
 
             return Ok(eventosDTO);
         }
@@ -57,10 +64,12 @@ namespace eventos_ger.Controller
                 Data = evento.data,
                 Horario = evento.horario,
                 id_local = evento.id_local,
-                id_organizador = evento.id_organizador,
-                Palestrantes = evento.palestrantes_presentes,
-                Participantes = evento.Participantes
+                id_organizador = evento.id_organizador
             };
+            
+            eventoDTO.Participantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Participante");
+            eventoDTO.Palestrantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Palestrante");
+            
 
             return Ok(eventoDTO);
         }
@@ -85,16 +94,19 @@ namespace eventos_ger.Controller
                 data = eventoDTO.Data,
                 horario = eventoDTO.Horario,
                 id_local = eventoDTO.id_local,
-                id_organizador = organizador.Id,
-                palestrantes_presentes = new List<int>(),
-                Participantes = new List<int>()
+                id_organizador = organizador.Id
             };
-
+            
             await _eventoRepository.AdicionarAsync(evento);
             
-            organizador.EventosOrganizados.Add(evento.Id);
+            AssociacaoEventoPessoa associacao = new AssociacaoEventoPessoa
+            {
+                idEvento = evento.Id,
+                idPessoa = organizador.Id,
+                tipo_pessoa = "Organizador"
+            };
             
-            await _organizadorRepository.AtualizarAsync(organizador);
+            await _associacaoEventoPessoa.AdicionarAsync(associacao);
             
             return Ok("criado com sucesso");
         }

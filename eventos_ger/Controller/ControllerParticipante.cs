@@ -9,11 +9,12 @@ namespace eventos_ger.Controller;
 public class ControllerParticipantes : ControllerBase
 {
     private readonly IParticipanteRepository _participanteRepository;
+    private readonly IAssociacaoEventoPessoa _associacaoEventoPessoa;
     
-
-    public ControllerParticipantes(IParticipanteRepository participanteRepository, IEventoRepository eventoRepository)
+    public ControllerParticipantes(IParticipanteRepository participanteRepository, IAssociacaoEventoPessoa associacaoEventoPessoa)
     {
         _participanteRepository = participanteRepository;
+        _associacaoEventoPessoa = associacaoEventoPessoa;
     }
 
     // Lista todos os participantes
@@ -29,9 +30,13 @@ public class ControllerParticipantes : ControllerBase
             Nascimento = participante.nascimento,
             Cpf = participante.cpf,
             Tipo_ingresso = participante.tipo_ingresso,
-            Status_inscricao = participante.status_inscricao,
-            EventosInscritos = participante.eventosInscritos
+            Status_inscricao = participante.status_inscricao
         }).ToList();
+        
+        foreach (ParticipanteDTO participante in participantesDTO)
+        {
+            participante.EventosInscritos = await _associacaoEventoPessoa.ObterEventosAsync(participante.Id, "Participante");
+        }
 
         return Ok(participantesDTO);
     }
@@ -54,9 +59,10 @@ public class ControllerParticipantes : ControllerBase
             Nome = participante.nome,
             Nascimento = participante.nascimento,
             Tipo_ingresso = participante.tipo_ingresso,
-            Status_inscricao = participante.status_inscricao,
-            EventosInscritos = participante.eventosInscritos
+            Status_inscricao = participante.status_inscricao
         };
+        
+        participanteDTO.EventosInscritos = await _associacaoEventoPessoa.ObterEventosAsync(participanteDTO.Id, "Participante");
 
         return Ok(participanteDTO);
     }
@@ -72,8 +78,7 @@ public class ControllerParticipantes : ControllerBase
             nascimento = participanteDTO.Nascimento,
             tipo_ingresso = participanteDTO.Tipo_ingresso,
             status_inscricao = participanteDTO.Status_inscricao,
-            cpf = participanteDTO.Cpf,
-            eventosInscritos = new List<int>()  // Lista de eventos vazia
+            cpf = participanteDTO.Cpf
         };
 
         await _participanteRepository.AdicionarAsync(participante);
@@ -89,8 +94,7 @@ public class ControllerParticipantes : ControllerBase
         var participante = new Participante
         {
             nome = participanteDTO.Nome,
-            nascimento = participanteDTO.Nascimento,
-            eventosInscritos = new List<int>()  // Lista de eventos vazia
+            nascimento = participanteDTO.Nascimento
         };
 
         await _participanteRepository.AtualizarAsync(participante);

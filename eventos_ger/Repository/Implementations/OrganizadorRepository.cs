@@ -49,8 +49,12 @@ public class OrganizadorRepository : IOrganizadorRepository
                 throw new ArgumentException("Organizador não encontrado.");
             }
 
+            var associacoes = _context.Associacoes
+                .Where(a => a.idPessoa == id && a.tipo_pessoa == "Organizador")
+                .ToListAsync();
+            
             // Verifica se o organizador está associado a algum evento
-            if (organizador.EventosOrganizados.Any())
+            if (associacoes != null)
             {
                 // Caso o organizador esteja associado a eventos, retorna um erro
                 throw new InvalidOperationException("O organizador não pode ser excluído porque está associado a eventos.");

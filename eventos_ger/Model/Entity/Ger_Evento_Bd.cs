@@ -1,4 +1,6 @@
-﻿namespace eventos_ger.Model;
+﻿using System.Data.Entity;
+
+namespace eventos_ger.Model;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -14,5 +16,6 @@ public class Ger_Evento_Bd : DbContext
     public DbSet<Organizador> Organizadores { get; set; }
     public DbSet<Palestrante> Palestrantes { get; set; }
     public DbSet<Participante> Participantes { get; set; }
+    public DbSet<AssociacaoEventoPessoa> Associacoes { get; set; }
     
 }
