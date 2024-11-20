@@ -16,7 +16,7 @@ builder.Services.AddScoped<IEventoRepository, EventoRepository>();
 builder.Services.AddScoped<IPalestranteRepository, PalestranteRepository>();
 builder.Services.AddScoped<IOrganizadorRepository, OrganizadorRepository>();
 builder.Services.AddScoped<ILocalRepository, LocalRepository>();
-builder.Services.AddScoped<IInscricaoRepository, InscricaoRepository>();
+//builder.Services.AddScoped<IInscricaoRepository, InscricaoRepository>();
 builder.Services.AddScoped<IAssociacaoEventoPessoa, AssociacaoEventoPessoaRepository>();
 
     // Registra outros serviços

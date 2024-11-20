@@ -13,19 +13,35 @@ public class AssociacaoEventoPessoaRepository : IAssociacaoEventoPessoa
         _context = context;
     }
 
+    public async Task<AssociacaoEventoPessoa> ObterAssociacaoAsync(int idEvento, int idPessoa, string tipo_pessoa)
+    {
+        return await _context.Associacoes
+            .FirstOrDefaultAsync(a =>
+                a.idEvento == idEvento &&
+                a.idPessoa == idPessoa &&
+                a.tipo_pessoa == tipo_pessoa);
+    }
+    
+    
     public async Task<List<int>> ObterEventosAsync(int idPessoa, string tipo_pessoa)
     {
         return await _context.Associacoes
-            .Where(a => a.idPessoa == idPessoa && a.tipo_pessoa == tipo_pessoa)
-            .Select(a => a.idEvento)
+            .Where(a => 
+                a.idPessoa == idPessoa && 
+                a.tipo_pessoa == tipo_pessoa)
+            .Select(a => 
+                a.idEvento)
             .ToListAsync();
     }
 
     public async Task<List<int>> ObterPessoasAsync(int idEvento, string tipo_pessoa)
     {
         return await _context.Associacoes
-            .Where(a => a.idEvento == idEvento && a.tipo_pessoa == tipo_pessoa)
-            .Select(a => a.idPessoa)
+            .Where(a => 
+                a.idEvento == idEvento && 
+                a.tipo_pessoa == tipo_pessoa)
+            .Select(a => 
+                a.idPessoa)
             .ToListAsync();
     }
 
@@ -34,5 +50,17 @@ public class AssociacaoEventoPessoaRepository : IAssociacaoEventoPessoa
         _context.Associacoes.Add(associacao);
         await _context.SaveChangesAsync();
         return associacao;
+    }
+
+    public async Task<AssociacaoEventoPessoa> RemoverAsync(AssociacaoEventoPessoa associacao)
+    {
+        // Buscar a entidade correspondente no banco de dados
+        var associacaoExistente = await ObterAssociacaoAsync(associacao.idEvento, associacao.idPessoa, associacao.tipo_pessoa);
+
+        if (associacaoExistente == null) return null;
+        
+        _context.Associacoes.Remove(associacaoExistente);
+        await _context.SaveChangesAsync();
+        return null;
     }
 }

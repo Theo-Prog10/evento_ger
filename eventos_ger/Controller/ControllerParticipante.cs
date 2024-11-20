@@ -79,6 +79,7 @@ public class ControllerParticipantes : ControllerBase
             tipo_ingresso = participanteDTO.Tipo_ingresso,
             status_inscricao = participanteDTO.Status_inscricao,
             cpf = participanteDTO.Cpf
+            
         };
 
         await _participanteRepository.AdicionarAsync(participante);

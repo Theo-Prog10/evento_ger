@@ -11,7 +11,7 @@ public class EventoDTO
     public int id_local { get; set; } 
     public int id_organizador { get; set; } 
     
-    public List<int> Palestrantes { get; set; }
-    public List<int> Participantes { get; set; }
+    public List<int> Palestrantes { get; set; } = new();
+    public List<int> Participantes { get; set; } = new();
     
 }
