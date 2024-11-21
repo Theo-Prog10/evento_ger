@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 // builder.Services.AddDbContext<Ger_Evento_Bd>(opt =>
 //     opt.UseNpgsql("Host=pg-295ab08e-theo-5135.j.aivencloud.com;Port=22824;Database=defaultdb;Username=avnadmin;Password=AVNS_zrwaxsPZ9ItxsCq3g6b"));
 
@@ -22,5 +25,13 @@ builder.Services.AddScoped<IAssociacaoEventoPessoa, AssociacaoEventoPessoaReposi
     // Registra outros serviços
 builder.Services.AddControllers();
 var app = builder.Build();
+
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();

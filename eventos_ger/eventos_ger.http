@@ -6,12 +6,12 @@ POST {{eventos_ger_HostAddress}}/local
 Content-Type: application/json
 
 {
-  "nome": "Praça da igreja",
+  "nome": "Praça do EPA",
   "logradouro": "rua",
   "numero": 20,
   "UF": "ES",
   "cidade": "Vitoria",
-  "bairro": "jardim camburi"
+  "bairro": "jardim da penha"
 }
 
 ### criar participante
@@ -81,3 +81,19 @@ DELETE {{eventos_ger_HostAddress}}/evento/1/participantes/1
 ### remove palestrante
 
 DELETE {{eventos_ger_HostAddress}}/evento/1/palestrantes/1
+
+###
+
+PUT {{eventos_ger_HostAddress}}/1
+Content-Type: application/json
+
+{
+  "nome": "eduardo",
+  "nascimento": "21/02/2004",
+  "cpf": "177.031.757-06",
+  "tipo_ingresso": "gratuito",
+  "status_inscricao": "pendente",
+  "eventosInscritos": [
+    0
+  ]
+}

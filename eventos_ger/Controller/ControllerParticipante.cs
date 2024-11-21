@@ -89,18 +89,34 @@ public class ControllerParticipantes : ControllerBase
 
     // Atualiza informações de um participante
     [HttpPut("participante/{id}")]
-    public async Task<IActionResult> PutParticipante(int id, ParticipanteDTO participanteDTO)
+    public async Task<IActionResult> AtualizarParticipante(int id, ParticipanteDTO participanteDto)
     {
-        // Convertendo DTO para entidade
-        var participante = new Participante
+        // Verifica se o participante existe
+        var participanteExistente = await _participanteRepository.ObterPorIdAsync(id);
+        if (participanteExistente == null)
         {
-            nome = participanteDTO.Nome,
-            nascimento = participanteDTO.Nascimento
-        };
+            return NotFound(new { mensagem = "Participante não encontrado." });
+        }
 
-        await _participanteRepository.AtualizarAsync(participante);
-        return NoContent();
+        // Mapeia os dados do DTO para a entidade Participante
+        participanteExistente.nome = participanteDto.Nome;
+        participanteExistente.nascimento = participanteDto.Nascimento;
+        participanteExistente.cpf = participanteDto.Cpf;
+        participanteExistente.tipo_ingresso = participanteDto.Tipo_ingresso;
+        participanteExistente.status_inscricao = participanteDto.Status_inscricao;
+
+        // Atualiza o participante (mas não mexe na lista de eventos)
+        try
+        {
+            await _participanteRepository.AtualizarAsync(participanteExistente);
+            return NoContent();  // Retorna NoContent após a atualização bem-sucedida
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { mensagem = "Erro interno", detalhe = ex.Message });
+        }
     }
+
 
     // Deleta um participante
     [HttpDelete("participante/{id}")]

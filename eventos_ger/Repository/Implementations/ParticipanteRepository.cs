@@ -33,9 +33,29 @@ public class ParticipanteRepository : IParticipanteRepository
 
     public async Task AtualizarAsync(Participante participante)
     {
-        _context.Participantes.Update(participante);
+        // Buscar o participante atual no banco de dados
+        var participanteExistente = await _context.Participantes
+            .FirstOrDefaultAsync(p => p.Id == participante.Id);
+
+        if (participanteExistente == null)
+        {
+            throw new ArgumentException("Participante não encontrado.");
+        }
+
+        // Atualizar os campos do participante, sem mexer na lista de eventos
+        participanteExistente.nome = participante.nome;
+        participanteExistente.nascimento = participante.nascimento;
+        participanteExistente.cpf = participante.cpf;
+        participanteExistente.tipo_ingresso = participante.tipo_ingresso;
+        participanteExistente.status_inscricao = participante.status_inscricao;
+
+        // A lista de eventos NÃO é alterada
+
+        // Atualizar a entidade no banco de dados
+        _context.Participantes.Update(participanteExistente);
         await _context.SaveChangesAsync();
     }
+
 
     public async Task DeletarAsync(int id)
     {
