@@ -16,14 +16,14 @@ public class ControllerLocal : ControllerBase
         _localRepository = localRepository;
     }
     
-    // lista locais cadastrados
+    //lista locais cadastrados
     [HttpGet("locais")]
     public async Task<ActionResult<IEnumerable<Local>>> GetLocais()
     {
         return Ok(await _localRepository.ObterLocaisAsync());
     }
     
-    // lista local por id
+    //lista local por id
     [HttpGet("local/{id}")]
     public async Task<ActionResult<IEnumerable<Local>>> GetLocal(int id)
     {

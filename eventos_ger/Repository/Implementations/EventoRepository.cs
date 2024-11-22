@@ -33,18 +33,36 @@ public class EventoRepository : IEventoRepository
 
     public async Task AtualizarAsync(Evento evento)
     {
-        _context.Entry(evento).State = EntityState.Modified;
+        //Busca o evento 
+        var eventoExistente = await _context.Eventos
+            .FirstOrDefaultAsync(e => e.Id == evento.Id);
+
+        if (eventoExistente == null)
+        {
+            throw new ArgumentException("Evento não encontrado.");
+        }
+
+        //Atualiza os campos 
+        eventoExistente.nome = evento.nome;
+        eventoExistente.descricao = evento.descricao;
+        eventoExistente.data = evento.data;
+        eventoExistente.horario = evento.horario;
+        eventoExistente.id_local = evento.id_local;
+        eventoExistente.id_organizador = evento.id_organizador;
+        
+        _context.Eventos.Update(eventoExistente);
         await _context.SaveChangesAsync();
     }
 
+
     public async Task DeletarAsync(int id)
     {
-        // Busca o evento que será deletado
+        //Busca o evento
         var evento = await _context.Eventos.FindAsync(id);
         if (evento != null)
         {
             
-            // Remover associacao
+            // Remove associacao
             var associacoes = await _context.Associacoes
                 .Where(a => a.idEvento == id)
                 .ToListAsync();

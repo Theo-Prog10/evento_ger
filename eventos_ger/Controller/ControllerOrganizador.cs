@@ -39,7 +39,7 @@ public class OrganizadorController : ControllerBase
         return Ok(organizadoresDTO);
     }
 
-    // Obter organizador por id
+    //Obter organizador por id
     [HttpGet("organizador/{id}")]
     public async Task<ActionResult<OrganizadorDTO>> GetOrganizador(int id)
     {
@@ -63,7 +63,7 @@ public class OrganizadorController : ControllerBase
         return Ok(organizadorDTO);
     }
 
-    // Criar um novo organizador
+    //Criar um novo organizador
     [HttpPost("organizadores")]
     public async Task<ActionResult<OrganizadorDTO>> PostOrganizador(OrganizadorDTO organizadorDTO)
     {
@@ -80,7 +80,7 @@ public class OrganizadorController : ControllerBase
         return Ok("Organizador adicionado com sucesso.");
     }
 
-    // Atualizar organizador
+    //Atualizar organizador
     [HttpPut("organizador/{id}")]
     public async Task<IActionResult> PutOrganizador(int id, OrganizadorDTO organizadorDTO)
     {
@@ -95,7 +95,7 @@ public class OrganizadorController : ControllerBase
             return NotFound(new { mensagem = "Organizador não encontrado." });
         }
 
-        // Atualizando os dados do organizador
+        //Atualizando os dados
         organizadorExistente.nome = organizadorDTO.Nome;
         organizadorExistente.contato = organizadorDTO.Contato;
         organizadorExistente.cpf = organizadorDTO.Cpf;
@@ -106,7 +106,7 @@ public class OrganizadorController : ControllerBase
         return NoContent();
     }
 
-    // Deletar organizador
+    //Deletar organizador
     [HttpDelete("organizador/{id}")]
     public async Task<IActionResult> DeleteOrganizador(int id)
     {

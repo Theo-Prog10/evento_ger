@@ -30,13 +30,30 @@ public class PalestranteRepository : IPalestranteRepository
 
         public async Task AtualizarAsync(Palestrante palestrante)
         {
-            _context.Palestrantes.Update(palestrante);
+            //Busca o palestrante
+            var palestranteExistente = await _context.Palestrantes
+                .FirstOrDefaultAsync(p => p.Id == palestrante.Id);
+
+            if (palestranteExistente == null)
+            {
+                throw new ArgumentException("Palestrante não encontrado.");
+            }
+
+            //Atualiza 
+            palestranteExistente.nome = palestrante.nome;
+            palestranteExistente.biografia = palestrante.biografia;
+            palestranteExistente.especialidade = palestrante.especialidade;
+            palestranteExistente.cpf = palestrante.cpf;
+            palestranteExistente.nascimento = palestrante.nascimento;
+            
+            _context.Palestrantes.Update(palestranteExistente);
             await _context.SaveChangesAsync();
         }
 
+
         public async Task DeletarAsync(int id)
         {
-            // Busca o palestrante pelo ID
+            //busca  pelo ID
             var palestrante = await _context.Palestrantes.FindAsync(id);
 
             if (palestrante != null)
@@ -47,10 +64,10 @@ public class PalestranteRepository : IPalestranteRepository
                 
                 _context.Associacoes.RemoveRange(associacoes);
                 
-                // Salva as alterações nos eventos
+                //salva as alterações nos eventos
                 await _context.SaveChangesAsync();
 
-                // Remove o palestrante do banco de dados
+                //remove o palestrante do banco de dados
                 _context.Palestrantes.Remove(palestrante);
                 await _context.SaveChangesAsync();
             }

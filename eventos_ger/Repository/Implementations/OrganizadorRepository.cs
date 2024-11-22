@@ -35,7 +35,19 @@ public class OrganizadorRepository : IOrganizadorRepository
 
         public async Task AtualizarAsync(Organizador organizador)
         {
-            _context.Entry(organizador).State = EntityState.Modified;
+            var organizadorExistente = await _context.Organizadores
+                .FirstOrDefaultAsync(o => o.Id == organizador.Id);
+            if (organizadorExistente == null)
+            {
+                throw new ArgumentException("Organizador não encontrado.");
+            }
+
+            //Atualizando
+            organizadorExistente.nome = organizador.nome;
+            organizadorExistente.cpf = organizador.cpf;
+            organizadorExistente.nascimento = organizador.nascimento;
+
+            _context.Organizadores.Update(organizadorExistente);
             await _context.SaveChangesAsync();
         }
 
@@ -45,7 +57,6 @@ public class OrganizadorRepository : IOrganizadorRepository
 
             if (organizador == null)
             {
-                // Se o organizador não existir, retorna um erro
                 throw new ArgumentException("Organizador não encontrado.");
             }
 
@@ -53,14 +64,13 @@ public class OrganizadorRepository : IOrganizadorRepository
                 .Where(a => a.idPessoa == id && a.tipo_pessoa == "Organizador")
                 .ToListAsync();
             
-            // Verifica se o organizador está associado a algum evento
+            //Verificando se o organizador está associado a algum evento
             if (associacoes != null)
             {
-                // Caso o organizador esteja associado a eventos, retorna um erro
                 throw new InvalidOperationException("O organizador não pode ser excluído porque está associado a eventos.");
             }
 
-            // Se não houver associação com eventos, o organizador pode ser removido
+            //Remove se ele nao estiver em um evento
             _context.Organizadores.Remove(organizador);
             await _context.SaveChangesAsync();
         }

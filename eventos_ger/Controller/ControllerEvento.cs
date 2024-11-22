@@ -19,7 +19,7 @@ namespace eventos_ger.Controller
             _associacaoEventoPessoa = associacaoEventoPessoa;
         }
 
-        // listar eventos
+        //listar eventos
         [HttpGet("/eventos")]
         public async Task<ActionResult<IEnumerable<EventoDTO>>> GetEventos()
         {
@@ -45,7 +45,7 @@ namespace eventos_ger.Controller
             return Ok(eventosDTO);
         }
 
-        // listar evento por id
+        //listar evento por id
         [HttpGet("evento/{id}")]
         public async Task<ActionResult<EventoDTO>> GetEvento(int id)
         {
@@ -74,11 +74,11 @@ namespace eventos_ger.Controller
             return Ok(eventoDTO);
         }
 
-        // criar evento
+        //criar evento
         [HttpPost("eventos")]
         public async Task<ActionResult<EventoDTO>> PostEvento(EventoDTO eventoDTO)
         {
-            // Verifica se o organizador existe
+            //Verificando se o organizador existe
             var organizador = await _organizadorRepository.ObterPorIdAsync(eventoDTO.id_organizador);
 
             if (organizador == null)
@@ -86,7 +86,7 @@ namespace eventos_ger.Controller
                 return NotFound(new { mensagem = "Organizador não encontrado." });
             }
 
-            // Convertendo DTO para entidade Evento
+            //Convertendo DTO
             var evento = new Evento
             {
                 nome = eventoDTO.Nome,
@@ -111,42 +111,39 @@ namespace eventos_ger.Controller
             return Ok("criado com sucesso");
         }
 
-        // atualizar evento
+        //atualizar evento
         [HttpPut("evento/{id}")]
-        public async Task<IActionResult> PutEvento(int id, EventoDTO eventoDTO)
+        public async Task<IActionResult> PutEvento(int id,EventoDTO eventoDTO)
         {
             if (id != eventoDTO.Id)
             {
-                return BadRequest();
+                return BadRequest(new { mensagem = "ID do evento não corresponde ao ID fornecido na URL." });
             }
 
+            //Busca o evento
             var eventoExistente = await _eventoRepository.ObterPorIdAsync(id);
             if (eventoExistente == null)
             {
-                return NotFound();
+                return NotFound(new { mensagem = "Evento não encontrado." });
             }
+            
 
-            // Verifica se o organizador existe
-            var organizador = await _organizadorRepository.ObterPorIdAsync(eventoDTO.id_organizador);
-            if (organizador == null)
-            {
-                return NotFound(new { mensagem = "Organizador não encontrado." });
-            }
-
-            // Atualizando os dados do evento
+            //Atualiza os campos
             eventoExistente.nome = eventoDTO.Nome;
             eventoExistente.descricao = eventoDTO.Descricao;
             eventoExistente.data = eventoDTO.Data;
             eventoExistente.horario = eventoDTO.Horario;
             eventoExistente.id_local = eventoDTO.id_local;
-            eventoExistente.id_organizador = organizador.Id;
+            eventoExistente.id_organizador = eventoDTO.id_organizador;
 
+            
             await _eventoRepository.AtualizarAsync(eventoExistente);
 
             return NoContent();
         }
 
-        // apagar evento
+
+        //apagar evento
         [HttpDelete("evento/{id}")]
         public async Task<IActionResult> DeleteEvento(int id)
         {

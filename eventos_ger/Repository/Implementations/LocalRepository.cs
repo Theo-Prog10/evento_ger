@@ -38,11 +38,11 @@ public class LocalRepository : ILocalRepository
 
     public async Task DeletarAsync(int id)
     {
-        // Busca o local que será deletado
+        //Busca o local 
         var local = await _context.Locais.FindAsync(id);
         if (local != null)
         {
-            // Remover o local das listas de eventos
+            //Remover o local das listas de eventos
             var eventos = await _context.Eventos
                 .Where(p => p.id_local.Equals(id)) 
                 .ToListAsync();

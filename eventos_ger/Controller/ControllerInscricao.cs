@@ -21,15 +21,15 @@ public class ControllerInscricao : ControllerBase
         _palestranteRepository = palestranteRepository;
     }
     
-    // inscreve participante em evento
+    //inscreve participante em evento
     [HttpPost("evento/{eventoId}/participantes/{participanteId}")]
     public async Task<IActionResult> AddParticipante(int eventoId, int participanteId)
     {
-        // Verifica se o evento existe
+        //Verifica se o evento existe
         var evento = await _eventoRepository.ObterPorIdAsync(eventoId);
         if (evento == null) return NotFound(new { mensagem = "Evento não encontrado." });
         
-        // Verifica se o participante existe
+        //Verifica se o participante existe
         var participante = await _participanteRepository.ObterPorIdAsync(participanteId);
         if (participante == null)return NotFound(new { mensagem = "Participante não encontrado." });
         
@@ -47,19 +47,19 @@ public class ControllerInscricao : ControllerBase
         return Ok(_associacaoEventoPessoa.AdicionarAsync(associacao));
     }
     
-    // adiciona palestrante em evento
+    //adiciona palestrante em evento
     [HttpPost("evento/{eventoId}/palestrantes/{palestranteId}")]
     public async Task<IActionResult> AddPalestrante(int eventoId, int palestranteId)
     {
-        // Verifica se o evento existe
+        //Verifica se o evento existe
         var evento = await _eventoRepository.ObterPorIdAsync(eventoId);
         if (evento == null) return NotFound(new { mensagem = "Evento não encontrado." });
         
-        // Verifica se o palestrante existe
+        //Verifica se o palestrante existe
         var palestrante = await _participanteRepository.ObterPorIdAsync(palestranteId);
         if (palestrante == null) return NotFound(new { mensagem = "Palestrante não encontrado." });
         
-        // Verifica se associação já existe
+        //Verifica se associação já existe
         if (await _associacaoEventoPessoa.ObterAssociacaoAsync(eventoId, palestranteId, "Palestrante") != null)
             return Conflict(new { mensagem = "O palestrante já está inscrito neste evento." });
         
@@ -72,15 +72,15 @@ public class ControllerInscricao : ControllerBase
         
         return Ok(_associacaoEventoPessoa.AdicionarAsync(associacao));
     }
-    // Remove participante do evento
+    //Remove participante do evento
     [HttpDelete("evento/{eventoId}/participantes/{participanteId}")]
     public async Task<IActionResult> DeleteParticipanteEvento(int participanteId, int eventoId)
     {
-        // Verifica se o evento existe
+        //Verifica se o evento existe
         var evento = await _eventoRepository.ObterPorIdAsync(eventoId);
         if (evento == null) return NotFound(new { mensagem = "Evento não encontrado." });
         
-        // Verifica se o participante existe
+        //Verifica se o participante existe
         var participante = await _participanteRepository.ObterPorIdAsync(participanteId);
         if (participante == null) return NotFound(new { mensagem = "Participante não encontrado." });
         
@@ -93,15 +93,15 @@ public class ControllerInscricao : ControllerBase
         return Ok(_associacaoEventoPessoa.RemoverAsync(associacao));
     }
     
-    // Remove palestrante do evento
+    //Remove palestrante do evento
     [HttpDelete("evento/{eventoId}/palestrantes/{palestranteId}")]
     public async Task<IActionResult> DeletePalestranteEvento(int palestranteId, int eventoId)
     {
-        // Verifica se o evento existe
+        //Verifica se o evento existe
         var evento = await _eventoRepository.ObterPorIdAsync(eventoId);
         if (evento == null) return NotFound(new { mensagem = "Evento não encontrado." });
         
-        // Verifica se o palestrante existe
+        //Verifica se o palestrante existe
         var palestrante = await _participanteRepository.ObterPorIdAsync(palestranteId);
         if (palestrante == null) return NotFound(new { mensagem = "Palestrante não encontrado." });
         

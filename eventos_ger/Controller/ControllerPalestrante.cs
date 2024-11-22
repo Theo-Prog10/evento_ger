@@ -15,7 +15,7 @@ public class ControllerPalestrante : ControllerBase
         _associacaoEventoPessoa = associacaoEventoPessoa;
     }
 
-    // Lista todos os palestrantes
+    //Lista todos 
     [HttpGet("palestrantes")]
     public async Task<ActionResult<IEnumerable<Palestrante>>> GetPalestrantes()
     {
@@ -38,7 +38,7 @@ public class ControllerPalestrante : ControllerBase
         return Ok(palestrantesDTO);
     }
 
-    // Busca palestrante por ID
+    //Busca por ID
     [HttpGet("palestrante/{id}")]
     public async Task<ActionResult<PalestranteDTO>> GetPalestrante(int id)
     {
@@ -47,7 +47,7 @@ public class ControllerPalestrante : ControllerBase
         if (palestrante == null) 
             return NotFound(new { mensagem = "Palestrante não encontrado." });
         
-        // Convertendo Palestrante para PalestranteDTO sem preocupação com os eventos
+        // Convertendo Palestrante para PalestranteDTO
         var palestranteDTO = new PalestranteDTO
         {
             Nome = palestrante.nome,
@@ -62,11 +62,11 @@ public class ControllerPalestrante : ControllerBase
         return Ok(palestranteDTO);
     }
 
-    // Cria um novo palestrante
+    //Cria um novo 
     [HttpPost("/palestrantes")]
     public async Task<ActionResult<PalestranteDTO>> PostPalestrante(PalestranteDTO palestranteDTO)
     {
-        // Convertendo PalestranteDTO para entidade Palestrante
+        //Convertendo PalestranteDTO
         var palestrante = new Palestrante
         {
             nome = palestranteDTO.Nome,
@@ -82,22 +82,30 @@ public class ControllerPalestrante : ControllerBase
         return Ok("Palestrante adicionado com sucesso.");
     }
 
-    // Atualiza as informações de um palestrante
+    //Atualiza as informações
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutPalestrante(int id, PalestranteDTO inputPalestranteDTO)
+    public async Task<IActionResult> PutPalestrante(int id, PalestranteDTO palestranteDTO)
     {
-        if (!await _palestranteRepository.ExisteAsync(id)) return NotFound();
-
-        // Convertendo DTO para entidade
-        var palestrante = new Palestrante
+        if (id != palestranteDTO.Id)
         {
-            Id = id,
-            nome = inputPalestranteDTO.Nome,
-            biografia = inputPalestranteDTO.Biografia,
-            especialidade = inputPalestranteDTO.Especialidade
-        };
+            return BadRequest(new { mensagem = "ID do palestrante não corresponde ao ID fornecido na URL." });
+        }
 
-        await _palestranteRepository.AtualizarAsync(palestrante);
+        //Verificando se o palestrante existe
+        var palestranteExistente = await _palestranteRepository.ObterPorIdAsync(id);
+        if (palestranteExistente == null)
+        {
+            return NotFound(new { mensagem = "Palestrante não encontrado." });
+        }
+
+        //Atualizando os campos 
+        palestranteExistente.nome = palestranteDTO.Nome;
+        palestranteExistente.biografia = palestranteDTO.Biografia;
+        palestranteExistente.especialidade = palestranteDTO.Especialidade;
+        palestranteExistente.cpf = palestranteDTO.Cpf;
+        palestranteExistente.nascimento = palestranteDTO.Nascimento;
+        
+        await _palestranteRepository.AtualizarAsync(palestranteExistente);
 
         return NoContent();
     }

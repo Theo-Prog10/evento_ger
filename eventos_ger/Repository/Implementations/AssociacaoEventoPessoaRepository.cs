@@ -54,7 +54,7 @@ public class AssociacaoEventoPessoaRepository : IAssociacaoEventoPessoa
 
     public async Task<AssociacaoEventoPessoa> RemoverAsync(AssociacaoEventoPessoa associacao)
     {
-        // Buscar a entidade correspondente no banco de dados
+        //Busca a entidade correspondente
         var associacaoExistente = await ObterAssociacaoAsync(associacao.idEvento, associacao.idPessoa, associacao.tipo_pessoa);
 
         if (associacaoExistente == null) return null;

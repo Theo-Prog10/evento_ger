@@ -33,7 +33,7 @@ public class ParticipanteRepository : IParticipanteRepository
 
     public async Task AtualizarAsync(Participante participante)
     {
-        // Buscar o participante atual no banco de dados
+        //Buscar o participante
         var participanteExistente = await _context.Participantes
             .FirstOrDefaultAsync(p => p.Id == participante.Id);
 
@@ -42,16 +42,13 @@ public class ParticipanteRepository : IParticipanteRepository
             throw new ArgumentException("Participante não encontrado.");
         }
 
-        // Atualizar os campos do participante, sem mexer na lista de eventos
+        //Atualizando
         participanteExistente.nome = participante.nome;
         participanteExistente.nascimento = participante.nascimento;
         participanteExistente.cpf = participante.cpf;
         participanteExistente.tipo_ingresso = participante.tipo_ingresso;
         participanteExistente.status_inscricao = participante.status_inscricao;
-
-        // A lista de eventos NÃO é alterada
-
-        // Atualizar a entidade no banco de dados
+        
         _context.Participantes.Update(participanteExistente);
         await _context.SaveChangesAsync();
     }
@@ -59,7 +56,7 @@ public class ParticipanteRepository : IParticipanteRepository
 
     public async Task DeletarAsync(int id)
     {
-        // Busca o participante pelo ID
+        //Busca pelo ID
         var participante = await _context.Participantes.FindAsync(id);
 
         if (participante != null)

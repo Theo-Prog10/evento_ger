@@ -17,7 +17,7 @@ public class ControllerParticipantes : ControllerBase
         _associacaoEventoPessoa = associacaoEventoPessoa;
     }
 
-    // Lista todos os participantes
+    //Lista todos os participantes
     [HttpGet("participantes")]
     public async Task<ActionResult<IEnumerable<ParticipanteDTO>>> GetParticipantes()
     {
@@ -41,7 +41,7 @@ public class ControllerParticipantes : ControllerBase
         return Ok(participantesDTO);
     }
 
-    // Busca participante por ID
+    //Busca participante por ID
     [HttpGet("participante/{id}")]
     public async Task<ActionResult<ParticipanteDTO>> GetParticipante(int id)
     {
@@ -52,7 +52,7 @@ public class ControllerParticipantes : ControllerBase
             return NotFound(new { mensagem = "Participante não encontrado." });
         }
 
-        // Convertendo a entidade para DTO
+        //Convertendo a entidade para DTO
         var participanteDTO = new ParticipanteDTO
         {
             Id = participante.Id,
@@ -67,11 +67,11 @@ public class ControllerParticipantes : ControllerBase
         return Ok(participanteDTO);
     }
 
-    // Cria um novo participante
+    //Cria um novo participante
     [HttpPost("participante")]
     public async Task<ActionResult> PostParticipante(ParticipanteDTO participanteDTO)
     {
-        // Convertendo DTO para entidade
+        //Convertendo DTO para entidade
         var participante = new Participante
         {
             nome = participanteDTO.Nome,
@@ -87,34 +87,27 @@ public class ControllerParticipantes : ControllerBase
         return Ok(new { mensagem = "Participante criado com sucesso." });
     }
 
-    // Atualiza informações de um participante
+    //Atualiza informações
     [HttpPut("participante/{id}")]
     public async Task<IActionResult> AtualizarParticipante(int id, ParticipanteDTO participanteDto)
     {
-        // Verifica se o participante existe
+        //Verifica se  existe
         var participanteExistente = await _participanteRepository.ObterPorIdAsync(id);
         if (participanteExistente == null)
         {
             return NotFound(new { mensagem = "Participante não encontrado." });
         }
-
-        // Mapeia os dados do DTO para a entidade Participante
+        
         participanteExistente.nome = participanteDto.Nome;
         participanteExistente.nascimento = participanteDto.Nascimento;
         participanteExistente.cpf = participanteDto.Cpf;
         participanteExistente.tipo_ingresso = participanteDto.Tipo_ingresso;
         participanteExistente.status_inscricao = participanteDto.Status_inscricao;
-
-        // Atualiza o participante (mas não mexe na lista de eventos)
-        try
-        {
-            await _participanteRepository.AtualizarAsync(participanteExistente);
-            return NoContent();  // Retorna NoContent após a atualização bem-sucedida
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { mensagem = "Erro interno", detalhe = ex.Message });
-        }
+        
+        
+        await _participanteRepository.AtualizarAsync(participanteExistente);
+        return NoContent();
+        
     }
 
 
