@@ -56,7 +56,7 @@ public class ControllerInscricao : ControllerBase
         if (evento == null) return NotFound(new { mensagem = "Evento não encontrado." });
         
         //Verifica se o palestrante existe
-        var palestrante = await _participanteRepository.ObterPorIdAsync(palestranteId);
+        var palestrante = await _palestranteRepository.ObterPorIdAsync(palestranteId);
         if (palestrante == null) return NotFound(new { mensagem = "Palestrante não encontrado." });
         
         //Verifica se associação já existe
@@ -102,7 +102,7 @@ public class ControllerInscricao : ControllerBase
         if (evento == null) return NotFound(new { mensagem = "Evento não encontrado." });
         
         //Verifica se o palestrante existe
-        var palestrante = await _participanteRepository.ObterPorIdAsync(palestranteId);
+        var palestrante = await _palestranteRepository.ObterPorIdAsync(palestranteId);
         if (palestrante == null) return NotFound(new { mensagem = "Palestrante não encontrado." });
         
         var associacao = new AssociacaoEventoPessoa
