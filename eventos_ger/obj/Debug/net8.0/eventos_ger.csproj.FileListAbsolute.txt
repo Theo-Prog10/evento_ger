@@ -76,8 +76,6 @@ C:\Users\edudu\RiderProjects\evento_ger\eventos_ger\bin\Debug\net8.0\Swashbuckle
 C:\Users\edudu\RiderProjects\evento_ger\eventos_ger\bin\Debug\net8.0\System.Diagnostics.DiagnosticSource.dll
 C:\Users\edudu\RiderProjects\evento_ger\eventos_ger\obj\Debug\net8.0\eventos_ger.csproj.AssemblyReference.cache
 C:\Users\edudu\RiderProjects\evento_ger\eventos_ger\obj\Debug\net8.0\eventos_ger.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\edudu\RiderProjects\evento_ger\eventos_ger\obj\Debug\net8.0\eventos_ger.AssemblyInfoInputs.cache
-C:\Users\edudu\RiderProjects\evento_ger\eventos_ger\obj\Debug\net8.0\eventos_ger.AssemblyInfo.cs
 C:\Users\edudu\RiderProjects\evento_ger\eventos_ger\obj\Debug\net8.0\eventos_ger.csproj.CoreCompileInputs.cache
 C:\Users\edudu\RiderProjects\evento_ger\eventos_ger\obj\Debug\net8.0\eventos_ger.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\edudu\RiderProjects\evento_ger\eventos_ger\obj\Debug\net8.0\eventos_ger.MvcApplicationPartsAssemblyInfo.cache
