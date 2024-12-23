@@ -1,122 +1,66 @@
 ﻿using eventos_ger.Model.DTOs;
-using eventos_ger.Model;
-using eventos_ger.Repository.Interfaces;
+using eventos_ger.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
-namespace eventos_ger.Controller;
-
 [ApiController]
-public class ControllerParticipantes : ControllerBase
+public class ParticipanteController : ControllerBase
 {
-    private readonly IParticipanteRepository _participanteRepository;
-    private readonly IAssociacaoEventoPessoa _associacaoEventoPessoa;
-    
-    public ControllerParticipantes(IParticipanteRepository participanteRepository, IAssociacaoEventoPessoa associacaoEventoPessoa)
+    private readonly IParticipanteService _participanteService;
+
+    public ParticipanteController(IParticipanteService participanteService)
     {
-        _participanteRepository = participanteRepository;
-        _associacaoEventoPessoa = associacaoEventoPessoa;
+        _participanteService = participanteService;
     }
 
-    //Lista todos os participantes
     [HttpGet("participantes")]
     public async Task<ActionResult<IEnumerable<ParticipanteDTO>>> GetParticipantes()
     {
-        var participantes = await _participanteRepository.ObterTodosAsync();
-
-        var participantesDTO = participantes.Select(participante => new ParticipanteDTO
-        {
-            Id = participante.Id,
-            Nome = participante.nome,
-            Nascimento = participante.nascimento,
-            Cpf = participante.cpf,
-            Tipo_ingresso = participante.tipo_ingresso,
-            Status_inscricao = participante.status_inscricao
-        }).ToList();
-        
-        foreach (ParticipanteDTO participante in participantesDTO)
-        {
-            participante.EventosInscritos = await _associacaoEventoPessoa.ObterEventosAsync(participante.Id, "Participante");
-        }
-
-        return Ok(participantesDTO);
+        var participantes = await _participanteService.ObterTodosAsync();
+        return Ok(participantes);
     }
 
-    //Busca participante por ID
     [HttpGet("participante/{id}")]
     public async Task<ActionResult<ParticipanteDTO>> GetParticipante(int id)
     {
-        var participante = await _participanteRepository.ObterPorIdAsync(id);
-
-        if (participante == null)
-        {
-            return NotFound(new { mensagem = "Participante não encontrado." });
-        }
-
-        //Convertendo a entidade para DTO
-        var participanteDTO = new ParticipanteDTO
-        {
-            Id = participante.Id,
-            Nome = participante.nome,
-            Nascimento = participante.nascimento,
-            Tipo_ingresso = participante.tipo_ingresso,
-            Status_inscricao = participante.status_inscricao
-        };
-        
-        participanteDTO.EventosInscritos = await _associacaoEventoPessoa.ObterEventosAsync(participanteDTO.Id, "Participante");
-
-        return Ok(participanteDTO);
+        var participante = await _participanteService.ObterPorIdAsync(id);
+        if (participante == null) return NotFound();
+        return Ok(participante);
     }
 
-    //Cria um novo participante
     [HttpPost("participante")]
-    public async Task<ActionResult> PostParticipante(ParticipanteDTO participanteDTO)
+    public async Task<ActionResult<ParticipanteDTO>> PostParticipante(ParticipanteDTO participanteDTO)
     {
-        //Convertendo DTO para entidade
-        var participante = new Participante
-        {
-            nome = participanteDTO.Nome,
-            nascimento = participanteDTO.Nascimento,
-            tipo_ingresso = participanteDTO.Tipo_ingresso,
-            status_inscricao = participanteDTO.Status_inscricao,
-            cpf = participanteDTO.Cpf
-            
-        };
-
-        await _participanteRepository.AdicionarAsync(participante);
-
-        return Ok(new { mensagem = "Participante criado com sucesso." });
+        var criado = await _participanteService.CriarAsync(participanteDTO);
+        return CreatedAtAction(nameof(GetParticipante), new { id = criado.Id }, criado);
     }
 
-    //Atualiza informações
     [HttpPut("participante/{id}")]
-    public async Task<IActionResult> AtualizarParticipante(int id, ParticipanteDTO participanteDto)
+    public async Task<IActionResult> PutParticipante(int id, ParticipanteDTO participanteDTO)
     {
-        //Verifica se  existe
-        var participanteExistente = await _participanteRepository.ObterPorIdAsync(id);
-        if (participanteExistente == null)
+        if (id != participanteDTO.Id) return BadRequest();
+
+        try
         {
-            return NotFound(new { mensagem = "Participante não encontrado." });
+            await _participanteService.AtualizarAsync(id, participanteDTO);
+            return NoContent();
         }
-        
-        participanteExistente.nome = participanteDto.Nome;
-        participanteExistente.nascimento = participanteDto.Nascimento;
-        participanteExistente.cpf = participanteDto.Cpf;
-        participanteExistente.tipo_ingresso = participanteDto.Tipo_ingresso;
-        participanteExistente.status_inscricao = participanteDto.Status_inscricao;
-        
-        
-        await _participanteRepository.AtualizarAsync(participanteExistente);
-        return NoContent();
-        
+        catch (ArgumentException ex)
+        {
+            return NotFound(new { mensagem = ex.Message });
+        }
     }
 
-
-    // Deleta um participante
     [HttpDelete("participante/{id}")]
     public async Task<IActionResult> DeleteParticipante(int id)
     {
-        if (!await _participanteRepository.ExisteAsync(id)) return NotFound();
-        await _participanteRepository.DeletarAsync(id);
-        return NoContent();
+        try
+        {
+            await _participanteService.RemoverAsync(id);
+            return NoContent();
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(new { mensagem = ex.Message });
+        }
     }
 }

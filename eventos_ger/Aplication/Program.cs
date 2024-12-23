@@ -1,6 +1,9 @@
 ﻿using eventos_ger.Model;
 using eventos_ger.Repository;
 using eventos_ger.Repository.Interfaces;
+using eventos_ger.Service;
+using eventos_ger.Service.Interface;
+using eventos_ger.Services;
 using Microsoft.EntityFrameworkCore;
 
 public partial class Program
@@ -20,6 +23,14 @@ public partial class Program
         builder.Services.AddScoped<IOrganizadorRepository, OrganizadorRepository>();
         builder.Services.AddScoped<ILocalRepository, LocalRepository>();
         builder.Services.AddScoped<IAssociacaoEventoPessoa, AssociacaoEventoPessoaRepository>();
+        
+        builder.Services.AddScoped<IParticipanteService, ParticipanteService>();
+        builder.Services.AddScoped<IPalestranteService, PalestranteService>();
+        builder.Services.AddScoped<IOrganizadorService, OrganizadorService>();
+        builder.Services.AddScoped<ILocalService, LocalService>();
+        builder.Services.AddScoped<IEventoService, EventoService>();
+        builder.Services.AddScoped<InscricaoService, InscricaoService>();
+
 
         // Registra outros serviços
         builder.Services.AddControllers();
