@@ -4,7 +4,6 @@ WORKDIR /app
 
 # Expõe a porta usada pela aplicação
 EXPOSE 8080
-EXPOSE 8081
 
 # Copiar arquivos do projeto
 COPY *.sln ./

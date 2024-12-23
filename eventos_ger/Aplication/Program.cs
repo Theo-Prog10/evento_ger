@@ -15,7 +15,7 @@ public partial class Program
 
         // Registra o repositório no contêiner de dependências
         builder.Services.AddScoped<IParticipanteRepository, ParticipanteRepository>();
-        builder.Services.AddScoped<IEventoRepository, EventoRepository>(); 
+        builder.Services.AddScoped<IEventoRepository, EventoRepository>();
         builder.Services.AddScoped<IPalestranteRepository, PalestranteRepository>();
         builder.Services.AddScoped<IOrganizadorRepository, OrganizadorRepository>();
         builder.Services.AddScoped<ILocalRepository, LocalRepository>();
@@ -25,13 +25,21 @@ public partial class Program
         builder.Services.AddControllers();
         var app = builder.Build();
 
-        // if (app.Environment.IsDevelopment())
-        // {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        // }
+        // Adiciona URLs para escutar em todas as interfaces de rede
+        app.Urls.Add("http://0.0.0.0:8080"); // Porta HTTP
+        
+
+        // Configura Swagger
+        app.UseSwagger();
+        app.UseSwaggerUI();
+
+        // Configuração de HTTPS redirection
         app.UseHttpsRedirection();
+
+        // Mapeia controladores
         app.MapControllers();
+
+        // Inicia o aplicativo
         app.Run();
     }
 }

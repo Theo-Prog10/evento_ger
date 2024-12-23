@@ -125,8 +125,6 @@ C:\Users\theog\RiderProjects\evento_ger\eventos_ger\bin\Debug\net8.0\Swashbuckle
 C:\Users\theog\RiderProjects\evento_ger\eventos_ger\bin\Debug\net8.0\System.Diagnostics.DiagnosticSource.dll
 C:\Users\theog\RiderProjects\evento_ger\eventos_ger\obj\Debug\net8.0\eventos_ger.csproj.AssemblyReference.cache
 C:\Users\theog\RiderProjects\evento_ger\eventos_ger\obj\Debug\net8.0\eventos_ger.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\theog\RiderProjects\evento_ger\eventos_ger\obj\Debug\net8.0\eventos_ger.AssemblyInfoInputs.cache
-C:\Users\theog\RiderProjects\evento_ger\eventos_ger\obj\Debug\net8.0\eventos_ger.AssemblyInfo.cs
 C:\Users\theog\RiderProjects\evento_ger\eventos_ger\obj\Debug\net8.0\eventos_ger.csproj.CoreCompileInputs.cache
 C:\Users\theog\RiderProjects\evento_ger\eventos_ger\obj\Debug\net8.0\eventos_ger.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\theog\RiderProjects\evento_ger\eventos_ger\obj\Debug\net8.0\eventos_ger.MvcApplicationPartsAssemblyInfo.cache
