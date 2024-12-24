@@ -27,6 +27,19 @@ Content-Type: application/json
   "status_inscricao": "pendente"
 }
 
+### criar participante
+
+POST {{eventos_ger_HostAddress}}/participante
+Content-Type: application/json
+
+{
+  "nome": "Theo Gomes",
+  "nascimento": "15/10/2004",
+  "cpf": "177.048.757-07",
+  "tipo_ingresso": "gratuito",
+  "status_inscricao": "pendente"
+}
+
 ### criar palestrante
 
 POST {{eventos_ger_HostAddress}}/palestrantes
@@ -69,6 +82,10 @@ Content-Type: application/json
 ### adiciona participante
 
 POST {{eventos_ger_HostAddress}}/evento/1/participantes/1
+
+### adiciona participante
+
+POST {{eventos_ger_HostAddress}}/evento/1/participantes/2
 
 ### adiciona palestrante
 

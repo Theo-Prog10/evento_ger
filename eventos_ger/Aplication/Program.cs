@@ -17,8 +17,21 @@ public partial class Program
         builder.Services.AddSwaggerGen();
 
         // Configuração do banco de dados PostgreSQL
-        builder.Services.AddDbContext<Ger_Evento_Bd>(options =>
-            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+        // Configuração do banco de dados PostgreSQL com tratamento de exceções
+        try
+        {
+            builder.Services.AddDbContext<Ger_Evento_Bd>(options =>
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+        }
+        catch (Exception ex)
+        {
+            // Log da exceção no console
+            Console.WriteLine($"Erro ao configurar o DbContext: {ex.Message}");
+            Console.WriteLine(ex.StackTrace);
+
+            // Se preferir, pode lançar novamente a exceção para interromper a execução
+            throw;
+        }
 
         // Registro de repositórios
         builder.Services.AddScoped<IParticipanteRepository, ParticipanteRepository>();
@@ -34,6 +47,7 @@ public partial class Program
         builder.Services.AddScoped<IOrganizadorService, OrganizadorService>();
         builder.Services.AddScoped<IEventoService, EventoService>();
         builder.Services.AddScoped<ILocalService, LocalService>();
+        builder.Services.AddScoped<IInscricaoService, InscricaoService>();
 
         // Adiciona suporte a controladores
         builder.Services.AddControllers();
