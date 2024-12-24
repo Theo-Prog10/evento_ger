@@ -55,11 +55,9 @@ public partial class Program
         var app = builder.Build();
 
         // Configuração do Swagger
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+        
+        app.UseSwagger();
+        app.UseSwaggerUI();
 
         // Redirecionamento para HTTPS
         app.UseHttpsRedirection();
