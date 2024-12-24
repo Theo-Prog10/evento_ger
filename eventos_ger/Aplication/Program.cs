@@ -12,39 +12,42 @@ public partial class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        // Configuração de serviços
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddDbContext<Ger_Evento_Bd>(opt => opt.UseInMemoryDatabase("Gerenciamento"));
 
-        // Registra o repositório no contêiner de dependências
+        // Configuração do banco de dados PostgreSQL
+        builder.Services.AddDbContext<Ger_Evento_Bd>(options =>
+            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+        // Registro de repositórios
         builder.Services.AddScoped<IParticipanteRepository, ParticipanteRepository>();
         builder.Services.AddScoped<IEventoRepository, EventoRepository>();
         builder.Services.AddScoped<IPalestranteRepository, PalestranteRepository>();
         builder.Services.AddScoped<IOrganizadorRepository, OrganizadorRepository>();
         builder.Services.AddScoped<ILocalRepository, LocalRepository>();
         builder.Services.AddScoped<IAssociacaoEventoPessoa, AssociacaoEventoPessoaRepository>();
-        
+
+        // Registro de serviços
         builder.Services.AddScoped<IParticipanteService, ParticipanteService>();
         builder.Services.AddScoped<IPalestranteService, PalestranteService>();
         builder.Services.AddScoped<IOrganizadorService, OrganizadorService>();
-        builder.Services.AddScoped<ILocalService, LocalService>();
         builder.Services.AddScoped<IEventoService, EventoService>();
-        builder.Services.AddScoped<InscricaoService, InscricaoService>();
+        builder.Services.AddScoped<ILocalService, LocalService>();
 
-
-        // Registra outros serviços
+        // Adiciona suporte a controladores
         builder.Services.AddControllers();
+
         var app = builder.Build();
 
-        // Adiciona URLs para escutar em todas as interfaces de rede
-        app.Urls.Add("http://0.0.0.0:8080"); // Porta HTTP
-        
+        // Configuração do Swagger
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
 
-        // Configura Swagger
-        app.UseSwagger();
-        app.UseSwaggerUI();
-
-        // Configuração de HTTPS redirection
+        // Redirecionamento para HTTPS
         app.UseHttpsRedirection();
 
         // Mapeia controladores
