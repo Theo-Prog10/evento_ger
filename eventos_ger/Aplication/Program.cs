@@ -40,6 +40,8 @@ public partial class Program
         builder.Services.AddScoped<IOrganizadorRepository, OrganizadorRepository>();
         builder.Services.AddScoped<ILocalRepository, LocalRepository>();
         builder.Services.AddScoped<IAssociacaoEventoPessoa, AssociacaoEventoPessoaRepository>();
+        builder.Services.AddScoped<IPessoaRepository, PessoaRepository>();
+        builder.Services.AddScoped<IPessoaService, PessoaService>();
 
         // Registro de serviços
         builder.Services.AddScoped<IParticipanteService, ParticipanteService>();
@@ -48,6 +50,7 @@ public partial class Program
         builder.Services.AddScoped<IEventoService, EventoService>();
         builder.Services.AddScoped<ILocalService, LocalService>();
         builder.Services.AddScoped<IInscricaoService, InscricaoService>();
+        builder.Services.AddScoped<IPessoaService, PessoaService>();
 
         // Adiciona suporte a controladores
         builder.Services.AddControllers();

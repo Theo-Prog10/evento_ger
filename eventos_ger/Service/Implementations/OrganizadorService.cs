@@ -1,5 +1,6 @@
 ﻿using eventos_ger.Model;
-using eventos_ger.Model.DTOs;
+using eventos_ger.Model.DTOs.Response;
+using eventos_ger.Model.DTOs.Request;
 using eventos_ger.Repository.Interfaces;
 using eventos_ger.Service.Interface;
 
@@ -16,34 +17,43 @@ namespace eventos_ger.Services
             _associacaoEventoPessoa = associacaoEventoPessoa;
         }
 
-        public async Task<IEnumerable<OrganizadorDTO>> ObterTodosAsync()
+        public async Task<IEnumerable<OrganizadorDTOResponse>> ObterTodosAsync()
         {
             var organizadores = await _organizadorRepository.ObterTodosAsync();
-            var organizadoresDTO = organizadores.Select(o => new OrganizadorDTO
+    
+            var organizadoresDTO = organizadores.Select(o => new OrganizadorDTOResponse
             {
-                Id = o.Id,
                 Nome = o.nome,
                 Nascimento = o.nascimento,
                 Cpf = o.cpf,
                 Contato = o.contato
             }).ToList();
 
-            foreach (var organizador in organizadoresDTO)
+            // Agora, você usa o 'id' diretamente da entidade Organizador
+            foreach (var organizador in organizadores)
             {
-                organizador.EventosOrganizados = await _associacaoEventoPessoa.ObterEventosAsync(organizador.Id, "Organizador");
+                // Aqui você pode acessar o 'id' diretamente
+                var eventosOrganizados = await _associacaoEventoPessoa.ObterEventosAsync(organizador.Id, "Organizador");
+        
+                // Você agora preenche o DTO com os eventos organizados, sem expor o 'id' diretamente
+                var dtoOrganizador = organizadoresDTO.FirstOrDefault(o => o.Nome == organizador.nome); // Assumindo que o nome é único
+                if (dtoOrganizador != null)
+                {
+                    dtoOrganizador.EventosOrganizados = eventosOrganizados;
+                }
             }
 
             return organizadoresDTO;
         }
 
-        public async Task<OrganizadorDTO?> ObterPorIdAsync(int id)
+
+        public async Task<OrganizadorDTOResponse?> ObterPorIdAsync(int id)
         {
             var organizador = await _organizadorRepository.ObterPorIdAsync(id);
             if (organizador == null) return null;
 
-            return new OrganizadorDTO
+            return new OrganizadorDTOResponse
             {
-                Id = organizador.Id,
                 Nome = organizador.nome,
                 Nascimento = organizador.nascimento,
                 Cpf = organizador.cpf,
@@ -52,21 +62,22 @@ namespace eventos_ger.Services
             };
         }
 
-        public async Task<OrganizadorDTO> CriarAsync(OrganizadorDTO organizadorDTO)
+        public async Task<OrganizadorDTOResponse> CriarAsync(OrganizadorDTORequest organizadorDTORequest)
         {
             var organizador = new Organizador
             {
-                nome = organizadorDTO.Nome,
-                nascimento = organizadorDTO.Nascimento,
-                cpf = organizadorDTO.Cpf,
-                contato = organizadorDTO.Contato
+                nome = organizadorDTORequest.Nome,
+                nascimento = organizadorDTORequest.Nascimento,
+                cpf = organizadorDTORequest.Cpf,
+                contato = organizadorDTORequest.Contato,
+                Login = organizadorDTORequest.Login,
+                Senha = organizadorDTORequest.Senha
             };
 
             var criado = await _organizadorRepository.AdicionarAsync(organizador);
 
-            return new OrganizadorDTO
+            return new OrganizadorDTOResponse
             {
-                Id = criado.Id,
                 Nome = criado.nome,
                 Nascimento = criado.nascimento,
                 Cpf = criado.cpf,
@@ -75,19 +86,28 @@ namespace eventos_ger.Services
             };
         }
 
-        public async Task AtualizarAsync(int id, OrganizadorDTO organizadorDTO)
+        public async Task<OrganizadorDTOResponse> AtualizarAsync(int id, OrganizadorDTORequest organizadorDTORequest)
         {
             var organizadorExistente = await _organizadorRepository.ObterPorIdAsync(id);
 
             if (organizadorExistente == null)
                 throw new ArgumentException("Organizador não encontrado.");
 
-            organizadorExistente.nome = organizadorDTO.Nome;
-            organizadorExistente.contato = organizadorDTO.Contato;
-            organizadorExistente.cpf = organizadorDTO.Cpf;
-            organizadorExistente.nascimento = organizadorDTO.Nascimento;
+            organizadorExistente.nome = organizadorDTORequest.Nome;
+            organizadorExistente.contato = organizadorDTORequest.Contato;
+            organizadorExistente.cpf = organizadorDTORequest.Cpf;
+            organizadorExistente.nascimento = organizadorDTORequest.Nascimento;
 
             await _organizadorRepository.AtualizarAsync(organizadorExistente);
+
+            return new OrganizadorDTOResponse
+            {
+                Nome = organizadorExistente.nome,
+                Nascimento = organizadorExistente.nascimento,
+                Cpf = organizadorExistente.cpf,
+                Contato = organizadorExistente.contato,
+                EventosOrganizados = await _associacaoEventoPessoa.ObterEventosAsync(organizadorExistente.Id, "Organizador")
+            };
         }
 
         public async Task RemoverAsync(int id)

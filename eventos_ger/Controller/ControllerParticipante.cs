@@ -1,4 +1,5 @@
-﻿using eventos_ger.Model.DTOs;
+﻿using eventos_ger.Model.DTOs.Request;
+using eventos_ger.Model.DTOs.Response;
 using eventos_ger.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,30 +13,34 @@ public class ParticipanteController : ControllerBase
         _participanteService = participanteService;
     }
 
+    // Obter todos os participantes (retorna ParticipanteDTOResponse)
     [HttpGet("participantes")]
-    public async Task<ActionResult<IEnumerable<ParticipanteDTO>>> GetParticipantes()
+    public async Task<ActionResult<IEnumerable<ParticipanteDTOResponse>>> GetParticipantes()
     {
         var participantes = await _participanteService.ObterTodosAsync();
         return Ok(participantes);
     }
 
+    // Obter participante por ID (retorna ParticipanteDTOResponse)
     [HttpGet("participante/{id}")]
-    public async Task<ActionResult<ParticipanteDTO>> GetParticipante(int id)
+    public async Task<ActionResult<ParticipanteDTOResponse>> GetParticipante(int id)
     {
         var participante = await _participanteService.ObterPorIdAsync(id);
         if (participante == null) return NotFound();
         return Ok(participante);
     }
 
+    // Criar participante (usa ParticipanteDTORequest para a entrada e retorna ParticipanteDTOResponse)
     [HttpPost("participante")]
-    public async Task<ActionResult<ParticipanteDTO>> PostParticipante(ParticipanteDTO participanteDTO)
+    public async Task<ActionResult<ParticipanteDTOResponse>> PostParticipante(ParticipanteDTORequest participanteDTO)
     {
         var criado = await _participanteService.CriarAsync(participanteDTO);
-        return CreatedAtAction(nameof(GetParticipante), new { id = criado.Id }, criado);
+        return CreatedAtAction(nameof(GetParticipantes), new { nome = criado.Nome }, criado);
     }
 
+    // Atualizar participante (usa ParticipanteDTORequest para a entrada)
     [HttpPut("participante/{id}")]
-    public async Task<IActionResult> PutParticipante(int id, ParticipanteDTO participanteDTO)
+    public async Task<IActionResult> PutParticipante(int id, ParticipanteDTORequest participanteDTO)
     {
         if (id != participanteDTO.Id) return BadRequest();
 
@@ -50,6 +55,7 @@ public class ParticipanteController : ControllerBase
         }
     }
 
+    // Remover participante (sem necessidade de DTO, já que o ID é suficiente)
     [HttpDelete("participante/{id}")]
     public async Task<IActionResult> DeleteParticipante(int id)
     {

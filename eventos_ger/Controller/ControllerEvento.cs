@@ -1,5 +1,7 @@
 ﻿using eventos_ger.Service;
 using eventos_ger.Model.DTOs;
+using eventos_ger.Model.DTOs.Request;
+using eventos_ger.Model.DTOs.Response;
 using eventos_ger.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,39 +17,69 @@ namespace eventos_ger.Controller
             _eventoService = eventoService;
         }
 
-        //listar eventos
+        // Listar eventos
         [HttpGet("/eventos")]
-        public async Task<ActionResult<IEnumerable<EventoDTO>>> GetEventos()
+        public async Task<ActionResult<IEnumerable<EventoDTOResponse>>> GetEventos()
         {
-            return await _eventoService.GetEventos();
+            var eventos = await _eventoService.GetEventos();
+            return Ok(eventos);
         }
 
-        //listar evento por id
+        // Listar evento por id
         [HttpGet("evento/{id}")]
-        public async Task<ActionResult<EventoDTO>> GetEvento(int id)
+        public async Task<ActionResult<EventoDTOResponse>> GetEvento(int id)
         {
-            return await _eventoService.GetEvento(id);
+            var evento = await _eventoService.GetEvento(id);
+            if (evento == null)
+                return NotFound(new { mensagem = "Evento não encontrado." });
+
+            return Ok(evento);
         }
 
-        //criar evento
+        // Criar evento
         [HttpPost("eventos")]
-        public async Task<ActionResult<EventoDTO>> PostEvento(EventoDTO eventoDTO)
+        public async Task<ActionResult<EventoDTOResponse>> PostEvento([FromBody] EventoDTORequest eventoRequestDTO)
         {
-            return await _eventoService.PostEvento(eventoDTO);
+            if (eventoRequestDTO == null)
+                return BadRequest(new { mensagem = "Dados inválidos." });
+
+            var eventoCriado = await _eventoService.PostEvento(eventoRequestDTO);
+
+            if (eventoCriado == null)
+                return BadRequest(new { mensagem = "Erro ao criar o evento." });
+
+            return CreatedAtAction(nameof(GetEvento), new { id = eventoCriado.Id }, eventoCriado);
         }
 
-        //atualizar evento
+
+
+
+
+        // Atualizar evento
         [HttpPut("evento/{id}")]
-        public async Task<IActionResult> PutEvento(int id, EventoDTO eventoDTO)
+        public async Task<IActionResult> PutEvento(int id, [FromBody] EventoDTORequest eventoRequestDTO)
         {
-            return await _eventoService.PutEvento(id, eventoDTO);
+
+            try
+            {
+                var eventoAtualizado = await _eventoService.PutEvento(id, eventoRequestDTO);
+                if (eventoAtualizado == null)
+                    return NotFound(new { mensagem = "Evento não encontrado para atualização." });
+
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(new { mensagem = ex.Message });
+            }
         }
 
-        //apagar evento
+        // Apagar evento
         [HttpDelete("evento/{id}")]
         public async Task<IActionResult> DeleteEvento(int id)
         {
             return await _eventoService.DeleteEvento(id);
         }
+
     }
 }

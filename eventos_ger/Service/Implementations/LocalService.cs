@@ -1,5 +1,6 @@
 ﻿using eventos_ger.Model;
-using eventos_ger.Model.DTOs;
+using eventos_ger.Model.DTOs.Response;
+using eventos_ger.Model.DTOs.Request;
 using eventos_ger.Repository.Interfaces;
 using eventos_ger.Service.Interface;
 
@@ -12,17 +13,29 @@ public class LocalService : ILocalService
         _localRepository = localRepository;
     }
 
-    public async Task<IEnumerable<Local>> ObterLocaisAsync()
+    public async Task<IEnumerable<LocalDTOResponse>> ObterLocaisAsync()
     {
-        return await _localRepository.ObterLocaisAsync();
+        var locais = await _localRepository.ObterLocaisAsync();
+        var locaisDto = locais.Select(l => new LocalDTOResponse
+        {
+            Id = l.Id,
+            Nome = l.nome,
+            Logradouro = l.Logradouro,
+            Numero = l.Numero,
+            UF = l.UF,
+            Cidade = l.Cidade,
+            Bairro = l.Bairro
+        }).ToList();
+
+        return locaisDto;
     }
 
-    public async Task<LocalDTO> ObterPorIdAsync(int id)
+    public async Task<LocalDTOResponse?> ObterPorIdAsync(int id)
     {
         var local = await _localRepository.ObterPorIdAsync(id);
         if (local == null) return null;
 
-        var localDto = new LocalDTO
+        return new LocalDTOResponse
         {
             Id = local.Id,
             Nome = local.nome,
@@ -32,39 +45,61 @@ public class LocalService : ILocalService
             Cidade = local.Cidade,
             Bairro = local.Bairro
         };
-
-        return localDto;
     }
 
-    public async Task<Local> AdicionarAsync(LocalDTO localDto)
+    public async Task<LocalDTOResponse> AdicionarAsync(LocalDTORequest localDtoRequest)
     {
         var local = new Local
         {
-            nome = localDto.Nome,
-            Logradouro = localDto.Logradouro,
-            Numero = localDto.Numero,
-            UF = localDto.UF,
-            Cidade = localDto.Cidade,
-            Bairro = localDto.Bairro
+            nome = localDtoRequest.Nome,
+            Logradouro = localDtoRequest.Logradouro,
+            Numero = localDtoRequest.Numero,
+            UF = localDtoRequest.UF,
+            Cidade = localDtoRequest.Cidade,
+            Bairro = localDtoRequest.Bairro
         };
 
-        return await _localRepository.AdicionarAsync(local);
+        var localCriado = await _localRepository.AdicionarAsync(local);
+
+        return new LocalDTOResponse
+        {
+            Id = localCriado.Id,
+            Nome = localCriado.nome,
+            Logradouro = localCriado.Logradouro,
+            Numero = localCriado.Numero,
+            UF = localCriado.UF,
+            Cidade = localCriado.Cidade,
+            Bairro = localCriado.Bairro
+        };
     }
 
-    public async Task AtualizarAsync(int id, LocalDTO localDto)
+    public async Task<LocalDTOResponse> AtualizarAsync(int id, LocalDTORequest localDtoRequest)
     {
         var localExistente = await _localRepository.ObterPorIdAsync(id);
         if (localExistente == null) throw new KeyNotFoundException("Local não encontrado.");
 
-        localExistente.nome = localDto.Nome;
-        localExistente.Logradouro = localDto.Logradouro;
-        localExistente.Bairro = localDto.Bairro;
-        localExistente.Cidade = localDto.Cidade;
-        localExistente.UF = localDto.UF;
-        localExistente.Numero = localDto.Numero;
+        localExistente.nome = localDtoRequest.Nome;
+        localExistente.Logradouro = localDtoRequest.Logradouro;
+        localExistente.Bairro = localDtoRequest.Bairro;
+        localExistente.Cidade = localDtoRequest.Cidade;
+        localExistente.UF = localDtoRequest.UF;
+        localExistente.Numero = localDtoRequest.Numero;
 
         await _localRepository.AtualizarAsync(localExistente);
+
+        // Retorna o DTO atualizado
+        return new LocalDTOResponse
+        {
+            Id = localExistente.Id,
+            Nome = localExistente.nome,
+            Logradouro = localExistente.Logradouro,
+            Numero = localExistente.Numero,
+            UF = localExistente.UF,
+            Cidade = localExistente.Cidade,
+            Bairro = localExistente.Bairro
+        };
     }
+
 
     public async Task DeletarAsync(int id)
     {

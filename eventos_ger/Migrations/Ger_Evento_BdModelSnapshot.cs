@@ -66,6 +66,10 @@ namespace eventos_ger.Migrations
                     b.Property<int>("idPessoa")
                         .HasColumnType("integer");
 
+                    b.Property<string>("login_pessoa")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("tipo_pessoa")
                         .IsRequired()
                         .HasColumnType("text");
@@ -114,6 +118,12 @@ namespace eventos_ger.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Login")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Senha")
+                        .HasColumnType("text");
+
                     b.Property<string>("contato")
                         .HasColumnType("text");
 
@@ -138,6 +148,12 @@ namespace eventos_ger.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Login")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Senha")
+                        .HasColumnType("text");
 
                     b.Property<string>("biografia")
                         .HasColumnType("text");
@@ -166,6 +182,12 @@ namespace eventos_ger.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Login")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Senha")
+                        .HasColumnType("text");
 
                     b.Property<string>("cpf")
                         .HasColumnType("text");

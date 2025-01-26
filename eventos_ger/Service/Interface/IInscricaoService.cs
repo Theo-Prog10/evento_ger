@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace eventos_ger.Service.Interface;
-
 public interface IInscricaoService
 {
-    Task<IActionResult> AddParticipanteAsync(int eventoId, int participanteId);
-    Task<IActionResult> AddPalestranteAsync(int eventoId, int palestranteId);
-    Task<IActionResult> DeleteParticipanteEventoAsync(int participanteId, int eventoId);
-    Task<IActionResult> DeletePalestranteEventoAsync(int palestranteId, int eventoId);
+    Task<bool> AddParticipanteAsync(int eventoId, int participanteId);
+    Task<bool> AddPalestranteAsync(int eventoId, int palestranteId);  // Certifique-se de que esta linha esteja presente
+    Task<bool> DeleteParticipanteEventoAsync(int participanteId, int eventoId);
+    Task<bool> DeletePalestranteEventoAsync(int palestranteId, int eventoId);
 }

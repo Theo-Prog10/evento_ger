@@ -8,8 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
         <PackageReference Include="EntityFramework6.Npgsql" Version="6.4.3" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
           <PrivateAssets>all</PrivateAssets>
@@ -25,6 +26,12 @@
       <Compile Remove="Model\DTO\**" />
       <Compile Remove="Repository\Implementations\InscricaoRepository.cs" />
       <Compile Remove="Repository\Interfaces\IInscricaoRepository.cs" />
+      <Compile Remove="Model\DTOs\eventoDTO.cs" />
+      <Compile Remove="Model\DTOs\localDTO.cs" />
+      <Compile Remove="Model\DTOs\organizadorDTO.cs" />
+      <Compile Remove="Model\DTOs\palestranteDTO.cs" />
+      <Compile Remove="Model\DTOs\participanteDTO.cs" />
+      <Compile Remove="Model\DTOs\pessoaDTO.cs" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,4 +1,5 @@
-﻿using eventos_ger.Model.DTOs;
+﻿using eventos_ger.Model.DTOs.Request;
+using eventos_ger.Model.DTOs.Response;
 using eventos_ger.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,15 +13,17 @@ public class OrganizadorController : ControllerBase
         _organizadorService = organizadorService;
     }
 
+    // Obter todos os organizadores (retorna OrganizadorDTOResponse)
     [HttpGet("organizadores")]
-    public async Task<ActionResult<IEnumerable<OrganizadorDTO>>> GetOrganizadores()
+    public async Task<ActionResult<IEnumerable<OrganizadorDTOResponse>>> GetOrganizadores()
     {
         var organizadores = await _organizadorService.ObterTodosAsync();
         return Ok(organizadores);
     }
 
+    // Obter organizador por ID (retorna OrganizadorDTOResponse)
     [HttpGet("organizador/{id}")]
-    public async Task<ActionResult<OrganizadorDTO>> GetOrganizador(int id)
+    public async Task<ActionResult<OrganizadorDTOResponse>> GetOrganizador(int id)
     {
         var organizador = await _organizadorService.ObterPorIdAsync(id);
         if (organizador == null) return NotFound(new { mensagem = "Organizador não encontrado." });
@@ -28,15 +31,17 @@ public class OrganizadorController : ControllerBase
         return Ok(organizador);
     }
 
+    // Criar organizador (usa OrganizadorDTORequest para a entrada e retorna OrganizadorDTOResponse)
     [HttpPost("organizadores")]
-    public async Task<ActionResult<OrganizadorDTO>> PostOrganizador(OrganizadorDTO organizadorDTO)
+    public async Task<ActionResult<OrganizadorDTOResponse>> PostOrganizador(OrganizadorDTORequest organizadorDTO)
     {
         var criado = await _organizadorService.CriarAsync(organizadorDTO);
-        return CreatedAtAction(nameof(GetOrganizador), new { id = criado.Id }, criado);
+        return CreatedAtAction(nameof(GetOrganizador), new { Nome = criado.Nome }, criado);
     }
 
+    // Atualizar organizador (usa OrganizadorDTORequest para a entrada)
     [HttpPut("organizador/{id}")]
-    public async Task<IActionResult> PutOrganizador(int id, OrganizadorDTO organizadorDTO)
+    public async Task<IActionResult> PutOrganizador(int id, OrganizadorDTORequest organizadorDTO)
     {
         try
         {
@@ -49,6 +54,7 @@ public class OrganizadorController : ControllerBase
         }
     }
 
+    // Remover organizador (sem necessidade de DTO, já que o ID é suficiente)
     [HttpDelete("organizador/{id}")]
     public async Task<IActionResult> DeleteOrganizador(int id)
     {

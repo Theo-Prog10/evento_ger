@@ -1,10 +1,11 @@
-﻿
-using eventos_ger.Service.Interface;
+﻿using eventos_ger.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace eventos_ger.Controller
 {
     [ApiController]
+    [Route("api/[controller]")]
     public class ControllerInscricao : ControllerBase
     {
         private readonly IInscricaoService _inscricaoService;
@@ -14,32 +15,88 @@ namespace eventos_ger.Controller
             _inscricaoService = inscricaoService;
         }
 
-        // inscreve participante em evento
+        /// <summary>
+        /// Inscreve um participante em um evento.
+        /// </summary>
         [HttpPost("evento/{eventoId}/participantes/{participanteId}")]
         public async Task<IActionResult> AddParticipante(int eventoId, int participanteId)
         {
-            return await _inscricaoService.AddParticipanteAsync(eventoId, participanteId);
+            try
+            {
+                var result = await _inscricaoService.AddParticipanteAsync(eventoId, participanteId);
+                
+                if (result)
+                    return Ok(new { mensagem = "Participante inscrito com sucesso." });
+
+                return BadRequest(new { mensagem = "Erro ao inscrever participante." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensagem = $"Erro interno: {ex.Message}" });
+            }
         }
 
-        // adiciona palestrante em evento
+        /// <summary>
+        /// Adiciona um palestrante em um evento.
+        /// </summary>
         [HttpPost("evento/{eventoId}/palestrantes/{palestranteId}")]
         public async Task<IActionResult> AddPalestrante(int eventoId, int palestranteId)
         {
-            return await _inscricaoService.AddPalestranteAsync(eventoId, palestranteId);
+            try
+            {
+                var result = await _inscricaoService.AddPalestranteAsync(eventoId, palestranteId);
+
+                if (result)
+                    return Ok(new { mensagem = "Palestrante adicionado ao evento com sucesso." });
+
+                return BadRequest(new { mensagem = "Erro ao adicionar palestrante ao evento." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensagem = $"Erro interno: {ex.Message}" });
+            }
         }
 
-        // remove participante do evento
+        /// <summary>
+        /// Remove um participante de um evento.
+        /// </summary>
         [HttpDelete("evento/{eventoId}/participantes/{participanteId}")]
-        public async Task<IActionResult> DeleteParticipanteEvento(int participanteId, int eventoId)
+        public async Task<IActionResult> DeleteParticipanteEvento(int eventoId, int participanteId)
         {
-            return await _inscricaoService.DeleteParticipanteEventoAsync(participanteId, eventoId);
+            try
+            {
+                var result = await _inscricaoService.DeleteParticipanteEventoAsync(participanteId, eventoId);
+
+                if (result)
+                    return NoContent(); // Sucesso sem conteúdo adicional
+
+                return BadRequest(new { mensagem = "Erro ao remover participante do evento." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensagem = $"Erro interno: {ex.Message}" });
+            }
         }
 
-        // remove palestrante do evento
+        /// <summary>
+        /// Remove um palestrante de um evento.
+        /// </summary>
         [HttpDelete("evento/{eventoId}/palestrantes/{palestranteId}")]
-        public async Task<IActionResult> DeletePalestranteEvento(int palestranteId, int eventoId)
+        public async Task<IActionResult> DeletePalestranteEvento(int eventoId, int palestranteId)
         {
-            return await _inscricaoService.DeletePalestranteEventoAsync(palestranteId, eventoId);
+            try
+            {
+                var result = await _inscricaoService.DeletePalestranteEventoAsync(palestranteId, eventoId);
+
+                if (result)
+                    return NoContent(); // Sucesso sem conteúdo adicional
+
+                return BadRequest(new { mensagem = "Erro ao remover palestrante do evento." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensagem = $"Erro interno: {ex.Message}" });
+            }
         }
     }
 }

@@ -6,4 +6,6 @@ public class pessoaDTO
     public string? Nome { get; set; }
     public string? Nascimento { get; set; }
     public string? Cpf { get; set; }
+    
+
 }

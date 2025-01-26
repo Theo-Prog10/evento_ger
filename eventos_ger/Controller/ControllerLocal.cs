@@ -1,5 +1,6 @@
 ﻿using eventos_ger.Model;
-using eventos_ger.Model.DTOs;
+using eventos_ger.Model.DTOs.Request;
+using eventos_ger.Model.DTOs.Response;
 using eventos_ger.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,16 +16,17 @@ namespace eventos_ger.Controller
             _localService = localService;
         }
 
-        // lista locais cadastrados
+        // Lista locais cadastrados (retorna LocalDTOResponse)
         [HttpGet("locais")]
-        public async Task<ActionResult<IEnumerable<Local>>> GetLocais()
+        public async Task<ActionResult<IEnumerable<LocalDTOResponse>>> GetLocais()
         {
-            return Ok(await _localService.ObterLocaisAsync());
+            var locais = await _localService.ObterLocaisAsync();
+            return Ok(locais);
         }
 
-        // lista local por id
+        // Lista local por id (retorna LocalDTOResponse)
         [HttpGet("local/{id}")]
-        public async Task<ActionResult<LocalDTO>> GetLocal(int id)
+        public async Task<ActionResult<LocalDTOResponse>> GetLocal(int id)
         {
             var localDto = await _localService.ObterPorIdAsync(id);
             if (localDto == null)
@@ -35,15 +37,15 @@ namespace eventos_ger.Controller
             return Ok(localDto);
         }
 
-        // cria local
+        // Cria local (usa LocalDTORequest para entrada e retorna LocalDTOResponse)
         [HttpPost("local")]
-        public async Task<ActionResult<Local>> PostLocal(LocalDTO localDto)
+        public async Task<ActionResult<LocalDTOResponse>> PostLocal(LocalDTORequest localDto)
         {
-            var novolocal = await _localService.AdicionarAsync(localDto);
-            return CreatedAtAction(nameof(GetLocal), new { id = novolocal.Id }, novolocal);
+            var novoLocal = await _localService.AdicionarAsync(localDto);
+            return CreatedAtAction(nameof(GetLocal), new { id = novoLocal.Id }, novoLocal);
         }
 
-        // apaga local por id
+        // Apaga local por id
         [HttpDelete("local/{localId}")]
         public async Task<IActionResult> DeleteLocal(int localId)
         {
@@ -58,9 +60,9 @@ namespace eventos_ger.Controller
             }
         }
 
-        // atualiza local por id
+        // Atualiza local por id (usa LocalDTORequest para entrada)
         [HttpPut("local/{id}")]
-        public async Task<IActionResult> PutLocal(int id, LocalDTO localDto)
+        public async Task<IActionResult> PutLocal(int id, LocalDTORequest localDto)
         {
             if (id != localDto.Id)
             {

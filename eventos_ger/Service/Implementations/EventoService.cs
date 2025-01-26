@@ -1,5 +1,6 @@
 ﻿using eventos_ger.Model;
-using eventos_ger.Model.DTOs;
+using eventos_ger.Model.DTOs.Request;
+using eventos_ger.Model.DTOs.Response;
 using eventos_ger.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using eventos_ger.Service.Interface;
@@ -19,31 +20,46 @@ namespace eventos_ger.Service
             _associacaoEventoPessoa = associacaoEventoPessoa;
         }
 
-        public async Task<ActionResult<IEnumerable<EventoDTO>>> GetEventos()
+        public async Task<ActionResult<IEnumerable<EventoDTOResponse>>> GetEventos()
         {
             var eventos = await _eventoRepository.ObterEventosAsync();
 
-            var eventosDTO = eventos.Select(e => new EventoDTO
+            // Converter eventos para lista para permitir acesso por índice
+            var eventosList = eventos.ToList();
+
+            // Criar uma lista para armazenar os eventos DTOs
+            var eventosDTO = new List<EventoDTOResponse>();
+
+            // Criar as tarefas para obter os palestrantes e participantes
+            var palestrantesTasks = eventosList.Select(e => _associacaoEventoPessoa.ObterPessoasAsync(e.Id, "Palestrante")).ToList();
+            var participantesTasks = eventosList.Select(e => _associacaoEventoPessoa.ObterPessoasAsync(e.Id, "Participante")).ToList();
+
+            // Esperar por todas as tarefas de palestrantes e participantes
+            var palestrantes = await Task.WhenAll(palestrantesTasks);
+            var participantes = await Task.WhenAll(participantesTasks);
+
+            // Preencher os eventosDTO com as informações
+            for (int i = 0; i < eventosList.Count; i++)
             {
-                Id = e.Id,
-                Nome = e.nome,
-                Descricao = e.descricao,
-                Data = e.data,
-                Horario = e.horario,
-                id_local = e.id_local,
-                id_organizador = e.id_organizador
-            }).ToList();
-            
-            foreach (EventoDTO evento in eventosDTO)
-            {
-                evento.Participantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Participante");
-                evento.Palestrantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Palestrante");
+                eventosDTO.Add(new EventoDTOResponse
+                {
+                    Id = eventosList[i].Id,
+                    Nome = eventosList[i].nome,
+                    Descricao = eventosList[i].descricao,
+                    Data = eventosList[i].data,
+                    Horario = eventosList[i].horario,
+                    IdLocal = eventosList[i].id_local,
+                    IdOrganizador = eventosList[i].id_organizador,
+                    Palestrantes = palestrantes[i],
+                    Participantes = participantes[i]
+                });
             }
 
             return eventosDTO;
         }
 
-        public async Task<ActionResult<EventoDTO>> GetEvento(int id)
+
+        public async Task<ActionResult<EventoDTOResponse>> GetEvento(int id)
         {
             var evento = await _eventoRepository.ObterPorIdAsync(id);
             if (evento == null)
@@ -51,38 +67,37 @@ namespace eventos_ger.Service
                 return new NotFoundResult();
             }
 
-            var eventoDTO = new EventoDTO
+            var eventoDTO = new EventoDTOResponse
             {
                 Id = evento.Id,
                 Nome = evento.nome,
                 Descricao = evento.descricao,
                 Data = evento.data,
                 Horario = evento.horario,
-                id_local = evento.id_local,
-                id_organizador = evento.id_organizador
+                IdLocal = evento.id_local,
+                IdOrganizador = evento.id_organizador,
+                Palestrantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Palestrante"),
+                Participantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Participante")
             };
-
-            eventoDTO.Participantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Participante");
-            eventoDTO.Palestrantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Palestrante");
 
             return eventoDTO;
         }
 
-        public async Task<ActionResult<EventoDTO>> PostEvento(EventoDTO eventoDTO)
+        public async Task<EventoDTOResponse> PostEvento(EventoDTORequest eventoDTORequest)
         {
-            var organizador = await _organizadorRepository.ObterPorIdAsync(eventoDTO.id_organizador);
+            var organizador = await _organizadorRepository.ObterPorIdAsync(eventoDTORequest.IdOrganizador);
             if (organizador == null)
             {
-                return new NotFoundObjectResult(new { mensagem = "Organizador não encontrado." });
+                throw new Exception("Organizador não encontrado."); // Lança uma exceção ou use sua própria lógica de erro
             }
 
             var evento = new Evento
             {
-                nome = eventoDTO.Nome,
-                descricao = eventoDTO.Descricao,
-                data = eventoDTO.Data,
-                horario = eventoDTO.Horario,
-                id_local = eventoDTO.id_local,
+                nome = eventoDTORequest.Nome,
+                descricao = eventoDTORequest.Descricao,
+                data = eventoDTORequest.Data,
+                horario = eventoDTORequest.Horario,
+                id_local = eventoDTORequest.IdLocal,
                 id_organizador = organizador.Id
             };
 
@@ -97,15 +112,25 @@ namespace eventos_ger.Service
 
             await _associacaoEventoPessoa.AdicionarAsync(associacao);
 
-            return new OkObjectResult("Evento criado com sucesso");
+            var eventoDTOResponse = new EventoDTOResponse
+            {
+                Id = evento.Id,
+                Nome = evento.nome,
+                Descricao = evento.descricao,
+                Data = evento.data,
+                Horario = evento.horario,
+                IdLocal = evento.id_local,
+                IdOrganizador = evento.id_organizador,
+                Palestrantes = eventoDTORequest.Palestrantes,
+                Participantes = eventoDTORequest.Participantes
+            };
+
+            return eventoDTOResponse;
         }
 
-        public async Task<IActionResult> PutEvento(int id, EventoDTO eventoDTO)
+
+        public async Task<IActionResult> PutEvento(int id, EventoDTORequest eventoDTORequest)
         {
-            if (id != eventoDTO.Id)
-            {
-                return new BadRequestObjectResult(new { mensagem = "ID do evento não corresponde ao ID fornecido na URL." });
-            }
 
             var eventoExistente = await _eventoRepository.ObterPorIdAsync(id);
             if (eventoExistente == null)
@@ -113,17 +138,31 @@ namespace eventos_ger.Service
                 return new NotFoundObjectResult(new { mensagem = "Evento não encontrado." });
             }
 
-            eventoExistente.nome = eventoDTO.Nome;
-            eventoExistente.descricao = eventoDTO.Descricao;
-            eventoExistente.data = eventoDTO.Data;
-            eventoExistente.horario = eventoDTO.Horario;
-            eventoExistente.id_local = eventoDTO.id_local;
-            eventoExistente.id_organizador = eventoDTO.id_organizador;
+            eventoExistente.nome = eventoDTORequest.Nome;
+            eventoExistente.descricao = eventoDTORequest.Descricao;
+            eventoExistente.data = eventoDTORequest.Data;
+            eventoExistente.horario = eventoDTORequest.Horario;
+            eventoExistente.id_local = eventoDTORequest.IdLocal;
+            eventoExistente.id_organizador = eventoDTORequest.IdOrganizador;
 
             await _eventoRepository.AtualizarAsync(eventoExistente);
 
-            return new NoContentResult();
+            var eventoDTOResponse = new EventoDTOResponse
+            {
+                Id = eventoExistente.Id,
+                Nome = eventoExistente.nome,
+                Descricao = eventoExistente.descricao,
+                Data = eventoExistente.data,
+                Horario = eventoExistente.horario,
+                IdLocal = eventoExistente.id_local,
+                IdOrganizador = eventoExistente.id_organizador,
+                Palestrantes = eventoDTORequest.Palestrantes,
+                Participantes = eventoDTORequest.Participantes
+            };
+
+            return new OkObjectResult(eventoDTOResponse);
         }
+
 
         public async Task<IActionResult> DeleteEvento(int id)
         {
