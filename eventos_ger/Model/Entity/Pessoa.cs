@@ -4,10 +4,15 @@ public class Pessoa
 {
     public int Id { get; set; }
     public string? nome { get; set; }
-    public string? nascimento { get; set; }
+    public DateOnly? nascimento { get; set; }
     public string? cpf { get; set; }
+    public string? biografia { get; set; }
+    public string? especialidade { get; set; }
+    public string? contato { get; set; }
+    public int id_usuario { get; set; }
     
-    public string? Login { get; set; } // Novo campo para o login
+    
+    /*public string? Login { get; set; } // Novo campo para o login
     public string? Senha { get; set; } // Novo campo para a senha
     
     public void SetSenha(string senha)
@@ -18,5 +23,5 @@ public class Pessoa
     public bool VerificarSenha(string senha)
     {
         return BCrypt.Net.BCrypt.Verify(senha, Senha);
-    }
+    }*/
 }

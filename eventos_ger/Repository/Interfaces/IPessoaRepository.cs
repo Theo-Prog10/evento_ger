@@ -5,7 +5,11 @@ namespace eventos_ger.Repository.Interfaces
 {
     public interface IPessoaRepository
     {
-        // Alterado para ser assíncrono e retornar um Task<Pessoa?>
-        Task<Pessoa?> ObterPorLoginESenhaAsync(string login, string senha);
+        Task<Pessoa> ObterPorIdAsync(int id);
+        Task<IEnumerable<Pessoa>> ObterTodosAsync();
+        Task<Pessoa> AdicionarAsync(Pessoa pessoa);
+        Task AtualizarAsync(Pessoa pessoa);
+        Task DeletarAsync(int id);
+        Task<bool> ExisteAsync(int id);
     }
 }

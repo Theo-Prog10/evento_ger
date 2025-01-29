@@ -2,6 +2,6 @@
 {
     public class LoginResponse
     {
-        public string TipoPessoa { get; set; }
+        public string Login { get; set; }
     }
 }

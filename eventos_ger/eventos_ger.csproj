@@ -32,6 +32,24 @@
       <Compile Remove="Model\DTOs\palestranteDTO.cs" />
       <Compile Remove="Model\DTOs\participanteDTO.cs" />
       <Compile Remove="Model\DTOs\pessoaDTO.cs" />
+      <Compile Remove="Service\Implementations\OrganizadorService.cs" />
+      <Compile Remove="Service\Implementations\PalestranteService.cs" />
+      <Compile Remove="Service\Implementations\ParticipanteService.cs" />
+      <Compile Remove="Service\Interface\IOrganizadorService.cs" />
+      <Compile Remove="Service\Interface\IPalestranteService.cs" />
+      <Compile Remove="Service\Interface\IParticipanteService.cs" />
+      <Compile Remove="Model\Entity\Organizador.cs" />
+      <Compile Remove="Model\Entity\Palestrante.cs" />
+      <Compile Remove="Model\Entity\Participante.cs" />
+      <Compile Remove="Model\DTOs\Response\organizadorResponse.cs" />
+      <Compile Remove="Model\DTOs\Response\palestranteResponse.cs" />
+      <Compile Remove="Model\DTOs\Response\participanteResponse.cs" />
+      <Compile Remove="Model\DTOs\Request\organizadorRequest.cs" />
+      <Compile Remove="Model\DTOs\Request\palestranteRequest.cs" />
+      <Compile Remove="Model\DTOs\Request\participanteRequest.cs" />
+      <Compile Remove="Controller\ControllerOrganizador.cs" />
+      <Compile Remove="Controller\ControllerPalestrante.cs" />
+      <Compile Remove="Controller\ControllerParticipante.cs" />
     </ItemGroup>
 
     <ItemGroup>

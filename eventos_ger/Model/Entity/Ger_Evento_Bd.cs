@@ -13,9 +13,11 @@ public class Ger_Evento_Bd : DbContext
 
     public DbSet<Evento> Eventos { get; set; }
     public DbSet<Local> Locais { get; set; }
-    public DbSet<Organizador> Organizadores { get; set; }
-    public DbSet<Palestrante> Palestrantes { get; set; }
-    public DbSet<Participante> Participantes { get; set; }
+    public DbSet<Pessoa> Pessoas { get; set; }
+    public DbSet<Usuario> Usuarios { get; set; }
+    //public DbSet<Organizador> Organizadores { get; set; }
+    //public DbSet<Palestrante> Palestrantes { get; set; }
+    //public DbSet<Participante> Participantes { get; set; }
     public DbSet<AssociacaoEventoPessoa> Associacoes { get; set; }
     
 }

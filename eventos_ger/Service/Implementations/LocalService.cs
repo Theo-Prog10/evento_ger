@@ -30,7 +30,7 @@ public class LocalService : ILocalService
         return locaisDto;
     }
 
-    public async Task<LocalDTOResponse?> ObterPorIdAsync(int id)
+    public async Task<LocalDTOResponse> ObterPorIdAsync(int id)
     {
         var local = await _localRepository.ObterPorIdAsync(id);
         if (local == null) return null;

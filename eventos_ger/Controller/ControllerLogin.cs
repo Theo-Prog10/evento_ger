@@ -25,8 +25,8 @@ namespace eventos_ger.Controller
             // Retorna o tipo de pessoa autenticado
             return Ok(new
             {
-                Message = $"{resultado.TipoPessoa} autenticado.",
-                TipoPessoa = resultado.TipoPessoa
+                Message = $"{resultado.Login} autenticado.",
+                TipoPessoa = resultado.Login
             });
         }
     }

@@ -10,13 +10,13 @@ namespace eventos_ger.Service
     public class EventoService : IEventoService
     {
         private readonly IEventoRepository _eventoRepository;
-        private readonly IOrganizadorRepository _organizadorRepository;
+        private readonly IPessoaRepository _pessoaRepository;
         private readonly IAssociacaoEventoPessoa _associacaoEventoPessoa;
 
-        public EventoService(IEventoRepository eventoRepository, IOrganizadorRepository organizadorRepository, IAssociacaoEventoPessoa associacaoEventoPessoa)
+        public EventoService(IEventoRepository eventoRepository, IPessoaRepository pessoaRepository, IAssociacaoEventoPessoa associacaoEventoPessoa)
         {
             _eventoRepository = eventoRepository;
-            _organizadorRepository = organizadorRepository;
+            _pessoaRepository = pessoaRepository;
             _associacaoEventoPessoa = associacaoEventoPessoa;
         }
 
@@ -30,14 +30,6 @@ namespace eventos_ger.Service
             // Criar uma lista para armazenar os eventos DTOs
             var eventosDTO = new List<EventoDTOResponse>();
 
-            // Criar as tarefas para obter os palestrantes e participantes
-            var palestrantesTasks = eventosList.Select(e => _associacaoEventoPessoa.ObterPessoasAsync(e.Id, "Palestrante")).ToList();
-            var participantesTasks = eventosList.Select(e => _associacaoEventoPessoa.ObterPessoasAsync(e.Id, "Participante")).ToList();
-
-            // Esperar por todas as tarefas de palestrantes e participantes
-            var palestrantes = await Task.WhenAll(palestrantesTasks);
-            var participantes = await Task.WhenAll(participantesTasks);
-
             // Preencher os eventosDTO com as informações
             for (int i = 0; i < eventosList.Count; i++)
             {
@@ -50,8 +42,8 @@ namespace eventos_ger.Service
                     Horario = eventosList[i].horario,
                     IdLocal = eventosList[i].id_local,
                     IdOrganizador = eventosList[i].id_organizador,
-                    Palestrantes = palestrantes[i],
-                    Participantes = participantes[i]
+                    Palestrantes = eventosList.Select(e => _associacaoEventoPessoa.ObterPessoasAsync(e.Id, "Palestrante").Id).ToList(),
+                    Participantes = eventosList.Select(e => _associacaoEventoPessoa.ObterPessoasAsync(e.Id, "Participante").Id).ToList()
                 });
             }
 
@@ -85,7 +77,7 @@ namespace eventos_ger.Service
 
         public async Task<EventoDTOResponse> PostEvento(EventoDTORequest eventoDTORequest)
         {
-            var organizador = await _organizadorRepository.ObterPorIdAsync(eventoDTORequest.IdOrganizador);
+            var organizador = await _pessoaRepository.ObterPorIdAsync(eventoDTORequest.IdOrganizador);
             if (organizador == null)
             {
                 throw new Exception("Organizador não encontrado."); // Lança uma exceção ou use sua própria lógica de erro

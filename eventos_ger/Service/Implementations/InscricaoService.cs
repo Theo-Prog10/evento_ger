@@ -5,18 +5,15 @@ public class InscricaoService : IInscricaoService
 {
     private readonly IAssociacaoEventoPessoa _associacaoEventoPessoa;
     private readonly IEventoRepository _eventoRepository;
-    private readonly IParticipanteRepository _participanteRepository;
-    private readonly IPalestranteRepository _palestranteRepository;
+    private readonly IPessoaRepository _pessoaRepository;
 
     public InscricaoService(IAssociacaoEventoPessoa associacaoEventoPessoa, 
-                            IEventoRepository eventoRepository, 
-                            IParticipanteRepository participanteRepository, 
-                            IPalestranteRepository palestranteRepository)
+                            IEventoRepository eventoRepository,
+                            IPessoaRepository pessoaRepository)
     {
         _associacaoEventoPessoa = associacaoEventoPessoa;
         _eventoRepository = eventoRepository;
-        _participanteRepository = participanteRepository;
-        _palestranteRepository = palestranteRepository;
+        _pessoaRepository = pessoaRepository;
     }
 
     public async Task<bool> AddParticipanteAsync(int eventoId, int participanteId)
@@ -24,7 +21,7 @@ public class InscricaoService : IInscricaoService
         var evento = await _eventoRepository.ObterPorIdAsync(eventoId);
         if (evento == null) return false;
 
-        var participante = await _participanteRepository.ObterPorIdAsync(participanteId);
+        var participante = await _pessoaRepository.ObterPorIdAsync(participanteId);
         if (participante == null) return false;
 
         if (await _associacaoEventoPessoa.ObterAssociacaoAsync(eventoId, participanteId, "Participante") != null)
@@ -46,7 +43,7 @@ public class InscricaoService : IInscricaoService
         var evento = await _eventoRepository.ObterPorIdAsync(eventoId);
         if (evento == null) return false;
 
-        var palestrante = await _palestranteRepository.ObterPorIdAsync(palestranteId);
+        var palestrante = await _pessoaRepository.ObterPorIdAsync(palestranteId);
         if (palestrante == null) return false;
 
         if (await _associacaoEventoPessoa.ObterAssociacaoAsync(eventoId, palestranteId, "Palestrante") != null)
@@ -68,7 +65,7 @@ public class InscricaoService : IInscricaoService
         var evento = await _eventoRepository.ObterPorIdAsync(eventoId);
         if (evento == null) return false;
 
-        var participante = await _participanteRepository.ObterPorIdAsync(participanteId);
+        var participante = await _pessoaRepository.ObterPorIdAsync(participanteId);
         if (participante == null) return false;
 
         var associacao = new AssociacaoEventoPessoa
@@ -87,7 +84,7 @@ public class InscricaoService : IInscricaoService
         var evento = await _eventoRepository.ObterPorIdAsync(eventoId);
         if (evento == null) return false;
 
-        var palestrante = await _palestranteRepository.ObterPorIdAsync(palestranteId);
+        var palestrante = await _pessoaRepository.ObterPorIdAsync(palestranteId);
         if (palestrante == null) return false;
 
         var associacao = new AssociacaoEventoPessoa

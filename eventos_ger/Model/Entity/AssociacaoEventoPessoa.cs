@@ -7,5 +7,5 @@ public class AssociacaoEventoPessoa
     public int idPessoa { get; set; }
     public string tipo_pessoa { get; set; }
     
-    public string login_pessoa { get; set; }
+    //public string login_pessoa { get; set; }
 }

@@ -14,26 +14,69 @@ namespace eventos_ger.Repository
             _context = context;
         }
 
-        // Método assíncrono para consultar qualquer tipo de Pessoa (Participante, Organizador, Palestrante)
-        public async Task<Pessoa?> ObterPorLoginESenhaAsync(string login, string senha)
+        public async Task<IEnumerable<Pessoa>> ObterTodosAsync()
         {
-            // Verifica cada tabela específica (Participante, Organizador, Palestrante)
-            var participante = await _context.Participantes
-                .FirstOrDefaultAsync(p => p.Login == login && p.Senha == senha);
-            if (participante != null)
-                return participante;
-
-            var organizador = await _context.Organizadores
-                .FirstOrDefaultAsync(o => o.Login == login && o.Senha == senha);
-            if (organizador != null)
-                return organizador;
-
-            var palestrante = await _context.Palestrantes
-                .FirstOrDefaultAsync(p => p.Login == login && p.Senha == senha);
-            if (palestrante != null)
-                return palestrante;
-
-            return null; // Retorna null caso não encontre em nenhuma das tabelas
+            return await _context.Pessoas.ToListAsync();
         }
+
+        public async Task<Pessoa?> ObterPorIdAsync(int id)
+        {
+            return await _context.Pessoas
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
+
+        public async Task<Pessoa> AdicionarAsync(Pessoa pessoa)
+        {
+            _context.Pessoas.Add(pessoa);
+            await _context.SaveChangesAsync();
+            return pessoa;
+        }
+
+        public async Task AtualizarAsync(Pessoa pessoa)
+        {
+            //Buscar o participante
+            var pessoaExistente = await _context.Pessoas
+                .FirstOrDefaultAsync(p => p.Id == pessoa.Id);
+
+            if (pessoaExistente == null)
+            {
+                throw new ArgumentException("Participante não encontrado.");
+            }
+
+            //Atualizando
+            pessoaExistente.nome = pessoa.nome;
+            pessoaExistente.nascimento = pessoa.nascimento;
+            pessoaExistente.cpf = pessoa.cpf;
+            
+            _context.Pessoas.Update(pessoaExistente);
+            await _context.SaveChangesAsync();
+        }
+        
+        public async Task DeletarAsync(int id) //revisar se continua valido ou se é melhor desativar usuario
+        {
+            //Busca pelo ID
+            var pessoa = await _context.Pessoas.FindAsync(id);
+
+            if (pessoa != null)
+            {
+                var associacoes = await _context.Associacoes
+                    .Where(a => a.Id == pessoa.Id && a.tipo_pessoa == "Participante")
+                    .ToListAsync();
+                    
+                _context.Associacoes.RemoveRange(associacoes);
+                
+                await _context.SaveChangesAsync();
+
+                // Remove o participante do banco de dados
+                _context.Pessoas.Remove(pessoa);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<bool> ExisteAsync(int id)
+        {
+            return await _context.Pessoas.AnyAsync(p => p.Id == id);
+        }
+        
     }
 }
