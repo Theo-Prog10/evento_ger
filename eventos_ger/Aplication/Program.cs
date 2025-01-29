@@ -20,9 +20,9 @@ public partial class Program
         // Configuração do banco de dados PostgreSQL com tratamento de exceções
         try
         {
-            //builder.Services.AddDbContext<Ger_Evento_Bd>(options =>
-            //    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-            builder.Services.AddDbContext<Ger_Evento_Bd>(opt => opt.UseInMemoryDatabase("Gerenciamento"));
+            builder.Services.AddDbContext<Ger_Evento_Bd>(options =>
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+            //builder.Services.AddDbContext<Ger_Evento_Bd>(opt => opt.UseInMemoryDatabase("Gerenciamento"));
         }
         catch (Exception ex)
         {
