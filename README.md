@@ -32,17 +32,17 @@ SÚMARIO
 
 **O objetivo estratégico do projeto é definido pela seguinte frase:**
 
-"Nosso objetivo é fornecer uma plataforma intuitiva e eficiente que permita a criação, organização e gestão de eventos de forma simplificada, proporcionando uma experiência otimizada para organizadores e participantes, com foco em aumentar a produtividade, reduzir custos e melhorar a interação nos eventos."
+&emsp;Nosso objetivo é fornecer uma plataforma intuitiva e eficiente que permita a criação, organização e gestão de eventos de forma simplificada, proporcionando uma experiência otimizada para os usuarios, com foco em aumentar a produtividade, reduzir custos e melhorar a interação nos eventos.
 
 ### RESUMO DO PROJETO
 
-&emsp;O EventMaster é uma plataforma digital desenvolvida para facilitar a criação e a gestão de eventos, além de permitir o controle e a organização de participantes, palestrantes e organizadores. O sistema é estruturado de forma a atender diferentes tipos de usuários, sendo eles: participantes, palestrantes e organizadores, cada um com suas características e responsabilidades dentro da plataforma. Todos esses usuários possuem informações comuns, como nome, CPF e data de nascimento, mas também têm atributos específicos que os definem em suas funções.
+&emsp;O EventMaster é uma plataforma digital desenvolvida para facilitar a criação e a gestão de eventos, além de permitir o controle e a organização de participantes, palestrantes e organizadores. O sistema é estruturado de forma a atender diferentes tipos de usuários, sendo eles: participantes, palestrantes e organizadores, cada um com suas características e responsabilidades dentro da plataforma. Todos esses usuários possuem informações comuns, como nome, CPF, data de nascimento, biografia e especialidade.
 
-&emsp;Os participantes possuem informações adicionais, como o tipo de ingresso adquirido e o status da inscrição. Já os palestrantes têm uma biografia e uma especialidade descritas, além de estarem associados às palestras que irão ministrar durante os eventos. Por fim, os organizadores são responsáveis por gerenciar e coordenar os eventos.
+&emsp;Todos os usuários tem a opção de organizar, palestrar e participar de um evento. Participantes tem a possibilidade de se inscrever e desinscrever de eventos. Palestrantes podem se desvincular de um evento, mas só podem ser vinculados por meio do organizador. O organizador é quem cria, gerencia e edita as informações do evento.
 
 &emsp;Um evento dentro da plataforma é composto por várias informações, como o nome, descrição, data, horário, local, o organizador responsável. Além disso, um evento possui palestrantes envolvidos e participantes que estão inscritos. O evento precisa estar associado a um organizador e a um local previamente cadastrados no sistema, sendo que a associação de palestrantes e participantes pode ser feita posteriormente, conforme a evolução do planejamento do evento.
 
-&emsp;O local de um evento é composto por informações como nome, logradouro, número, UF (Unidade Federativa), cidade e bairro, permitindo que os eventos sejam mapeados para um espaço específico. Para a criação de um evento, é obrigatório associar um organizador e um local que já estejam cadastrados no sistema.
+&emsp;O local de um evento é composto por informações como nome, logradouro, número, UF, cidade e bairro, permitindo que os eventos sejam mapeados para um espaço específico. Para a criação de um evento, é obrigatório associar um organizador e um local que já estejam cadastrados no sistema.
 
 &emsp;Além disso, o sistema oferece a capacidade de inserir e remover tanto participantes quanto palestrantes de um evento. Isso é necessário porque ambos podem, eventualmente, cancelar sua presença.
 
@@ -79,7 +79,7 @@ Adotamos o modelo de desenvolvimento MVC, que promove uma estrutura modular e se
 * View, responsável pela interface com o usuário (nesse caso não implementado pela falta de interface gráfica);
 * Controller, que gerencia as interações entre a interface e a lógica de negócio.
 
-Para garantir uma arquitetura bem estruturada, implementamos também um repositório com interfaces e suas respectivas implementações.
+Para garantir uma arquitetura bem estruturada, implementamos também um Repository com interfaces e suas respectivas implementações, e um Service, onde implementamos nossas regras de negócio.
 
 Entre os pacotes instalados para o projeto, destacam-se o Microsoft.EntityFrameworkCore e o Microsoft.EntityFrameworkCore.InMemory, que foram fundamentais para a construção e manipulação do banco de dados utilizado.
 

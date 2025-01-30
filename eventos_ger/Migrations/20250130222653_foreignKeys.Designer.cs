@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using eventos_ger.Model;
@@ -11,9 +12,11 @@ using eventos_ger.Model;
 namespace eventos_ger.Migrations
 {
     [DbContext(typeof(Ger_Evento_Bd))]
-    partial class Ger_Evento_BdModelSnapshot : ModelSnapshot
+    [Migration("20250130222653_foreignKeys")]
+    partial class foreignKeys
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
