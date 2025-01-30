@@ -11,5 +11,7 @@ namespace eventos_ger.Repository.Interfaces
         Task AtualizarAsync(Pessoa pessoa);
         Task DeletarAsync(int id);
         Task<bool> ExisteAsync(int id);
+
+        Task<Pessoa?> ObterPorLoginSenhaAsync(string login, string senha);
     }
 }

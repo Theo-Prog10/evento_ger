@@ -1,4 +1,5 @@
-﻿using eventos_ger.Model.DTOs.Request;
+﻿using eventos_ger.Model;
+using eventos_ger.Model.DTOs.Request;
 using eventos_ger.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 using eventos_ger.Model.DTOs.Response; // Adicione a referência à classe de resposta
@@ -16,18 +17,16 @@ namespace eventos_ger.Controller
             _pessoaService = pessoaService;
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] loginRequest request)
+        [HttpGet("login")]
+        public async Task<ActionResult<Pessoa?>> Login(string login, string senha)
         {
-            // Chama o serviço para validar as credenciais e obter o resultado
-            var resultado = await _pessoaService.ValidarLoginAsync(request.Login, request.Senha);
+            var pessoa = await _pessoaService.ValidarLoginAsync(login, senha);
+    
+            if (pessoa == null)
+                return NotFound(null); // Retorna 404 caso não encontre o usuário
 
-            // Retorna o tipo de pessoa autenticado
-            return Ok(new
-            {
-                Message = $"{resultado.Login} autenticado.",
-                TipoPessoa = resultado.Login
-            });
+            return Ok(pessoa); // Retorna o objeto Pessoa
         }
+
     }
 }

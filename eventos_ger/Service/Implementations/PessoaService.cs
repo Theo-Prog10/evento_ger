@@ -20,24 +20,7 @@ namespace eventos_ger.Services
             _associacaoEventoPessoa = associacaoEventoPessoa;
             _usuarioRepository = usuarioRepository;
         }
-
-        public async Task<LoginResponse> ValidarLoginAsync(string login, string senha)
-        {
-            // Verifica se existe uma pessoa com o login e senha informados
-            var pessoa = await _usuarioRepository.ObterPorLoginESenhaAsync(login, senha);
-
-            if (pessoa == null)
-            {
-                // Lança exceção se não encontrar a pessoa
-                throw new UnauthorizedAccessException("Credenciais inválidas.");
-            }
-            
-
-            return new LoginResponse
-            {
-                Login = login
-            };
-        }
+        
         
         public async Task<IEnumerable<PessoaDTOResponse>> ObterTodosAsync()
         {
@@ -173,5 +156,11 @@ namespace eventos_ger.Services
 
             await _pessoaRepository.DeletarAsync(id);
         }
+        
+        public async Task<Pessoa?> ValidarLoginAsync(string login, string senha)
+        {
+            return await _pessoaRepository.ObterPorLoginSenhaAsync(login, senha);
+        }
+
     }
 }

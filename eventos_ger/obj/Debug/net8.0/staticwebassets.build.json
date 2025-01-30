@@ -1,12 +1,11 @@
 {
   "Version": 1,
-  "Hash": "Y51sgiKR267hj9ExCcr8ChrE90YqiZvJC7uU3gWjnKA=",
+  "Hash": "4Ux9KVYe2lJdIpoD7OyFEdFOjS35p2MEsu4pOIh+pqY=",
   "Source": "eventos_ger",
   "BasePath": "_content/eventos_ger",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
+  "Assets": []
 }

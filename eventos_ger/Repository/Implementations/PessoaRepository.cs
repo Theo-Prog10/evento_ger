@@ -78,5 +78,19 @@ namespace eventos_ger.Repository
             return await _context.Pessoas.AnyAsync(p => p.Id == id);
         }
         
+        public async Task<Pessoa?> ObterPorLoginSenhaAsync(string login, string senha)
+        {
+            return await _context.Pessoas
+                .Join(_context.Usuarios, 
+                    pessoa => pessoa.id_usuario, 
+                    usuario => usuario.Id, 
+                    (pessoa, usuario) => new { Pessoa = pessoa, Usuario = usuario })
+                .Where(joined => joined.Usuario.login == login && joined.Usuario.senha == senha)
+                .Select(joined => joined.Pessoa) // Seleciona apenas a Pessoa
+                .FirstOrDefaultAsync();
+        }
+
+
+        
     }
 }
