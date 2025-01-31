@@ -7,7 +7,7 @@ namespace eventos_ger.Service.Interface
 {
     public interface IPessoaService
     {
-        Task<Pessoa?> ValidarLoginAsync(string login, string senha); // Tornando o nome consistente com o método assíncrono
+        Task<PessoaDTOResponse?> ValidarLoginAsync(string login, string senha); // Tornando o nome consistente com o método assíncrono
         
         // Obter todos os usuarios
         Task<IEnumerable<PessoaDTOResponse>> ObterTodosAsync();

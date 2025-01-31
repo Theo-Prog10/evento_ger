@@ -86,9 +86,12 @@ namespace eventos_ger.Repository
                     usuario => usuario.Id, 
                     (pessoa, usuario) => new { Pessoa = pessoa, Usuario = usuario })
                 .Where(joined => joined.Usuario.login == login && joined.Usuario.senha == senha)
-                .Select(joined => joined.Pessoa) // Seleciona apenas a Pessoa
+                .Select(joined => joined.Pessoa)
                 .FirstOrDefaultAsync();
         }
+
+
+
 
 
         

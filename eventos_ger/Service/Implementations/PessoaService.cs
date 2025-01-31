@@ -25,7 +25,6 @@ namespace eventos_ger.Services
         public async Task<IEnumerable<PessoaDTOResponse>> ObterTodosAsync()
         {
             var pessoas = await _pessoaRepository.ObterTodosAsync();
-    
             var pessoasDTO = pessoas.Select(p => new PessoaDTOResponse
             {
                 Nome = p.nome,
@@ -33,16 +32,14 @@ namespace eventos_ger.Services
                 Cpf = p.cpf
             }).ToList();
 
-            // Agora, você usa o 'id' diretamente da entidade Participante
             foreach (var pessoa in pessoas)
             {
-                // Aqui você pode acessar o 'id' diretamente
+                // Agora usamos o repositório para buscar os eventos diretamente
                 var eventosInscritos = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Participante");
                 var eventosPalestrados = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Palestrante");
                 var eventosOrganizados = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Organizador");
 
-                // Você agora preenche o DTO com os eventos, sem expor o 'id' diretamente
-                var dtoPessoa = pessoasDTO.FirstOrDefault(p => p.Nome == pessoa.nome); // Assumindo que o nome é único
+                var dtoPessoa = pessoasDTO.FirstOrDefault(p => p.Nome == pessoa.nome);
                 if (dtoPessoa != null)
                 {
                     dtoPessoa.EventosInscritos = eventosInscritos;
@@ -53,6 +50,8 @@ namespace eventos_ger.Services
 
             return pessoasDTO;
         }
+
+
 
 
         public async Task<PessoaDTOResponse> ObterPorIdAsync(int id)
@@ -157,10 +156,26 @@ namespace eventos_ger.Services
             await _pessoaRepository.DeletarAsync(id);
         }
         
-        public async Task<Pessoa?> ValidarLoginAsync(string login, string senha)
+        public async Task<PessoaDTOResponse?> ValidarLoginAsync(string login, string senha)
         {
-            return await _pessoaRepository.ObterPorLoginSenhaAsync(login, senha);
+            var pessoa = await _pessoaRepository.ObterPorLoginSenhaAsync(login, senha);
+
+            if (pessoa == null)
+                return null;
+
+            return new PessoaDTOResponse
+            {
+                Nome = pessoa.nome,
+                Nascimento = pessoa.nascimento,
+                Cpf = pessoa.cpf,
+                EventosInscritos = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Participante"),
+                EventosPalestrados = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Palestrante"),
+                EventosOrganizados = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Organizador")
+            };
         }
+
+
+
 
     }
 }

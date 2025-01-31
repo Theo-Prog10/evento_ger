@@ -23,32 +23,35 @@ namespace eventos_ger.Service
         public async Task<ActionResult<IEnumerable<EventoDTOResponse>>> GetEventos()
         {
             var eventos = await _eventoRepository.ObterEventosAsync();
-
-            // Converter eventos para lista para permitir acesso por índice
             var eventosList = eventos.ToList();
-
-            // Criar uma lista para armazenar os eventos DTOs
             var eventosDTO = new List<EventoDTOResponse>();
 
-            // Preencher os eventosDTO com as informações
-            for (int i = 0; i < eventosList.Count; i++)
+            foreach (var evento in eventosList)
             {
+                // Obtém os IDs dos palestrantes e participantes corretamente
+                var palestrantesIds = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Palestrante") 
+                                      ?? new List<int>();
+
+                var participantesIds = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Participante") 
+                                       ?? new List<int>();
+
                 eventosDTO.Add(new EventoDTOResponse
                 {
-                    Id = eventosList[i].Id,
-                    Nome = eventosList[i].nome,
-                    Descricao = eventosList[i].descricao,
-                    Data = eventosList[i].data,
-                    Horario = eventosList[i].horario,
-                    IdLocal = eventosList[i].id_local,
-                    IdOrganizador = eventosList[i].id_organizador,
-                    Palestrantes = eventosList.Select(e => _associacaoEventoPessoa.ObterPessoasAsync(e.Id, "Palestrante").Id).ToList(),
-                    Participantes = eventosList.Select(e => _associacaoEventoPessoa.ObterPessoasAsync(e.Id, "Participante").Id).ToList()
+                    Id = evento.Id,
+                    Nome = evento.nome,
+                    Descricao = evento.descricao,
+                    Data = evento.data,
+                    Horario = evento.horario,
+                    IdLocal = evento.id_local,
+                    IdOrganizador = evento.id_organizador,
+                    Palestrantes = palestrantesIds,
+                    Participantes = participantesIds
                 });
             }
 
             return eventosDTO;
         }
+
 
 
         public async Task<ActionResult<EventoDTOResponse>> GetEvento(int id)

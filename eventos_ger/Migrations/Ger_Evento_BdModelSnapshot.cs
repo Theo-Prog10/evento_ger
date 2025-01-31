@@ -57,7 +57,7 @@ namespace eventos_ger.Migrations
 
                     b.HasIndex("id_local");
 
-                    b.ToTable("Eventos");
+                    b.ToTable("Eventos", (string)null);
                 });
 
             modelBuilder.Entity("eventos_ger.Model.AssociacaoEventoPessoa", b =>
@@ -84,7 +84,7 @@ namespace eventos_ger.Migrations
 
                     b.HasIndex("idPessoa");
 
-                    b.ToTable("Associacoes");
+                    b.ToTable("Associacoes", (string)null);
                 });
 
             modelBuilder.Entity("eventos_ger.Model.Local", b =>
@@ -115,7 +115,7 @@ namespace eventos_ger.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locais");
+                    b.ToTable("Locais", (string)null);
                 });
 
             modelBuilder.Entity("eventos_ger.Model.Pessoa", b =>
@@ -152,7 +152,7 @@ namespace eventos_ger.Migrations
                     b.HasIndex("id_usuario")
                         .IsUnique();
 
-                    b.ToTable("Pessoas");
+                    b.ToTable("Pessoas", (string)null);
                 });
 
             modelBuilder.Entity("eventos_ger.Model.Usuario", b =>
@@ -171,7 +171,7 @@ namespace eventos_ger.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("Usuarios", (string)null);
                 });
 
             modelBuilder.Entity("Evento", b =>

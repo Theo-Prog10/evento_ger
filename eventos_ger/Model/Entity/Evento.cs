@@ -16,6 +16,6 @@ public class Evento
 
     [ForeignKey("Pessoa")]
     public int id_organizador { get; set; }
-    public virtual Pessoa Organizador { get; set; }
+    public virtual Pessoa Pessoa { get; set; }
     
 }

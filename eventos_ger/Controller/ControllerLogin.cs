@@ -18,7 +18,7 @@ namespace eventos_ger.Controller
         }
 
         [HttpGet("login")]
-        public async Task<ActionResult<Pessoa?>> Login(string login, string senha)
+        public async Task<ActionResult<PessoaDTOResponse?>> Login(string login, string senha)
         {
             var pessoa = await _pessoaService.ValidarLoginAsync(login, senha);
     

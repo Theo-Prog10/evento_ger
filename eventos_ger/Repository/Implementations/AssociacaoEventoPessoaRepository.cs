@@ -26,13 +26,11 @@ public class AssociacaoEventoPessoaRepository : IAssociacaoEventoPessoa
     public async Task<List<int>> ObterEventosAsync(int id, string tipo_pessoa)
     {
         return await _context.Associacoes
-            .Where(a => 
-                a.Id == id && 
-                a.tipo_pessoa == tipo_pessoa)
-            .Select(a => 
-                a.idEvento)
+            .Where(a => a.idPessoa == id && a.tipo_pessoa == tipo_pessoa)
+            .Select(a => a.idEvento)
             .ToListAsync();
     }
+
 
     public async Task<List<int>> ObterPessoasAsync(int idEvento, string tipo_pessoa)
     {
