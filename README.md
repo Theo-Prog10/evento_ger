@@ -103,6 +103,9 @@ Apesar de simples, o projeto oferece um ótimo gerenciamento de eventos.
 #### TECNOLOGIA UTILIZADA
 Para nosso projeto, usamos a linguagem C# da Microsoft, por ser uma oportunidade de aprendermos uma nova linguagem e por ser semelhante ao Java, que já conheciamos. Além disso, a linguagem C# trouxe algumas facilidades como a criação de um banco InMemory e da criação de Tabelas por meio de Classes.
 
+### DIAGRAMA DE CASOS DE USO
+![image](https://github.com/user-attachments/assets/e492adc0-c7fd-4ba9-aeee-36124ab41234)
+
 #### DIAGRAMA DE PROJETO
 * CONTROLLER E DTO </br>
 ```mermaid
