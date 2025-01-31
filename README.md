@@ -105,21 +105,268 @@ Para nosso projeto, usamos a linguagem C# da Microsoft, por ser uma oportunidade
 
 #### DIAGRAMA DE PROJETO
 * CONTROLLER E DTO </br>
-![ControllerDTO](https://github.com/Theo-Prog10/evento_ger/blob/main/eventos_ger/ControllerDTO.png)
+```mermaid
+classDiagram
+    class EventoController {
+        +GetEventos() : Task<ActionResult<IEnumerable<EventoDTOResponse>>>
+        +GetEvento(int id) : Task<ActionResult<EventoDTOResponse>>
+        +PostEvento(EventoDTORequest eventoRequestDTO) : Task<ActionResult<EventoDTOResponse>>
+        +PutEvento(int id, EventoDTORequest eventoRequestDTO) : Task<IActionResult>
+        +DeleteEvento(int id) : Task<IActionResult>
+    }
 
-* ENTITY </br>
-![Entity](https://github.com/Theo-Prog10/evento_ger/blob/main/eventos_ger/Entity.png)
+    class ControllerInscricao {
+        +AddParticipante(int eventoId, int participanteId) : Task<IActionResult>
+        +AddPalestrante(int eventoId, int palestranteId) : Task<IActionResult>
+        +DeleteParticipanteEvento(int eventoId, int participanteId) : Task<IActionResult>
+        +DeletePalestranteEvento(int eventoId, int palestranteId) : Task<IActionResult>
+    }
+
+    class ControllerLocal {
+        +GetLocais() : Task<ActionResult<IEnumerable<LocalDTOResponse>>>
+        +GetLocal(int id) : Task<ActionResult<LocalDTOResponse>>
+        +PostLocal(LocalDTORequest localDto) : Task<ActionResult<LocalDTOResponse>>
+        +PutLocal(int id, LocalDTORequest localDto) : Task<IActionResult>
+        +DeleteLocal(int localId) : Task<IActionResult>
+    }
+
+    class LoginController {
+        +Login(string login, string senha) : Task<ActionResult<Pessoa?>>
+    }
+
+    class PessoaController {
+        +GetPessoas() : Task<ActionResult<IEnumerable<PessoaDTOResponse>>>
+        +GetPessoas(int id) : Task<ActionResult<PessoaDTOResponse>>
+        +PostPessoa(PessoaDTORequest pessoaDTO) : Task<ActionResult<PessoaDTOResponse>>
+        +PutPessoa(int id, PessoaDTORequest pessoaDTO) : Task<IActionResult>
+        +DeletePessoa(int id) : Task<IActionResult>
+    }
+
+    class EventoDTORequest {
+        +string Nome
+        +string? Descricao
+        +string? Data
+        +string? Horario
+        +int IdLocal
+        +int IdOrganizador
+        +List<int> Palestrantes
+        +List<int> Participantes
+    }
+
+    class EventoDTOResponse {
+        +int Id
+        +string Nome
+        +string? Descricao
+        +string? Data
+        +string? Horario
+        +int IdLocal
+        +int IdOrganizador
+        +List<int> Palestrantes
+        +List<int> Participantes
+    }
+
+    class LocalDTORequest {
+        +int Id
+        +string Nome
+        +string Logradouro
+        +int Numero
+        +string UF
+        +string Cidade
+        +string Bairro
+    }
+
+    class LocalDTOResponse {
+        +int Id
+        +string Nome
+        +string Logradouro
+        +int Numero
+        +string UF
+        +string Cidade
+        +string Bairro
+    }
+
+    class PessoaDTORequest {
+        +int Id
+        +string? Nome
+        +DateOnly? Nascimento
+        +string? Cpf
+        +string? Biografia
+        +string? Especialidade
+        +string? Contato
+        +string? Login
+        +string? Senha
+    }
+
+    class PessoaDTOResponse {
+        +string? Nome
+        +DateOnly? Nascimento
+        +string? Cpf
+        +List<int> EventosInscritos
+    }
+
+    EventoController --> EventoDTORequest
+    EventoController --> EventoDTOResponse
+    ControllerLocal --> LocalDTORequest
+    ControllerLocal --> LocalDTOResponse
+    PessoaController --> PessoaDTORequest
+    PessoaController --> PessoaDTOResponse
+
+```
 
 * REPOSITORY </br>
-![Repository](https://github.com/Theo-Prog10/evento_ger/blob/main/eventos_ger/Repository.png)
+```mermaid
+classDiagram
+direction TB
+    class Ger_Evento_Bd {
+	    +DbSet Associacoes
+	    +DbSet Locais
+	    +DbSet Pessoas
+	    +DbSet Usuarios
+    }
+    class IAssociacaoEventoPessoa {
+	    +Task ObterAssociacaoAsync(int idEvento, int idPessoa)
+	    +Task&gt; ObterEventosAsync(int idPessoa)
+	    +Task&gt; ObterPessoasAsync(int idEvento)
+	    +Task AdicionarAsync(AssociacaoEventoPessoa associacao)
+	    +Task RemoverAsync(int idEvento, int idPessoa)
+    }
+    class ILocalRepository {
+	    +Task&gt; ObterLocaisAsync()
+	    +Task ObterPorIdAsync(int id)
+	    +Task AdicionarAsync(Local local)
+	    +Task AtualizarAsync(Local local)
+	    +Task DeletarAsync(int id)
+	    +Task ExisteAsync(int id)
+    }
+    class IPessoaRepository {
+	    +Task&gt; ObterTodosAsync()
+	    +Task ObterPorIdAsync(int id)
+	    +Task AdicionarAsync(Pessoa pessoa)
+	    +Task AtualizarAsync(Pessoa pessoa)
+	    +Task DeletarAsync(int id)
+	    +Task ExisteAsync(int id)
+	    +Task ObterPorLoginSenhaAsync(string login, string senha)
+    }
+    class IUsuarioRepository {
+	    +Task ObterPorLoginESenhaAsync(string login, string senha)
+	    +Task&gt; ObterLoginsAsync()
+	    +Task ObterLoginAsync(int idPessoa)
+	    +Task AdicionarAsync(Usuario usuario)
+	    +Task AtualizarAsync(Usuario usuario)
+	    +Task DeletarAsync(int id)
+	    +Task ExisteAsync(int id)
+    }
+    class AssociacaoEventoPessoaRepository {
+	    +Task ObterAssociacaoAsync(int idEvento, int idPessoa)
+	    +Task&gt; ObterEventosAsync(int idPessoa)
+	    +Task&gt; ObterPessoasAsync(int idEvento)
+	    +Task AdicionarAsync(AssociacaoEventoPessoa associacao)
+	    +Task RemoverAsync(int idEvento, int idPessoa)
+    }
+    class LocalRepository {
+	    +Task&gt; ObterLocaisAsync()
+	    +Task ObterPorIdAsync(int id)
+	    +Task AdicionarAsync(Local local)
+	    +Task AtualizarAsync(Local local)
+	    +Task DeletarAsync(int id)
+	    +Task ExisteAsync(int id)
+    }
+    class PessoaRepository {
+	    +Task&gt; ObterTodosAsync()
+	    +Task ObterPorIdAsync(int id)
+	    +Task AdicionarAsync(Pessoa pessoa)
+	    +Task AtualizarAsync(Pessoa pessoa)
+	    +Task DeletarAsync(int id)
+	    +Task ExisteAsync(int id)
+	    +Task ObterPorLoginSenhaAsync(string login, string senha)
+    }
+    class UsuarioRepository {
+	    +Task ObterPorLoginESenhaAsync(string login, string senha)
+	    +Task&gt; ObterLoginsAsync()
+	    +Task ObterLoginAsync(int idPessoa)
+	    +Task AdicionarAsync(Usuario usuario)
+	    +Task AtualizarAsync(Usuario usuario)
+	    +Task DeletarAsync(int id)
+	    +Task ExisteAsync(int id)
+    }
 
-#### DIAGRAMA DE CLASSES </br>
-![Diagrama](https://github.com/Theo-Prog10/evento_ger/blob/main/eventos_ger/Diagrama%20de%20Classes.png)
+    AssociacaoEventoPessoaRepository --> IAssociacaoEventoPessoa
+    LocalRepository --> ILocalRepository
+    PessoaRepository --> IPessoaRepository
+    UsuarioRepository --> IUsuarioRepository
+    AssociacaoEventoPessoaRepository --> Ger_Evento_Bd
+    LocalRepository --> Ger_Evento_Bd
+    PessoaRepository --> Ger_Evento_Bd
+    UsuarioRepository --> Ger_Evento_Bd
 
-#### ESTRUTURAS DE PASTAS MVC
+```
+
+#### MODEL </br>
+```mermaid
+classDiagram
+    class Ger_Evento_Bd {
+        +DbSet<Evento> Eventos
+        +DbSet<Local> Locais
+        +DbSet<Pessoa> Pessoas
+        +DbSet<Usuario> Usuarios
+        +DbSet<AssociacaoEventoPessoa> Associacoes
+    }
+
+    class Evento {
+        +int Id
+        +string nome
+        +string descricao
+        +string data
+        +string horario
+        +int id_local
+        +int id_organizador
+    }
+
+    class Local {
+        +int Id
+        +string nome
+        +string Logradouro
+        +int Numero
+        +string UF
+        +string Cidade
+        +string Bairro
+    }
+
+    class Pessoa {
+        +int Id
+        +string nome
+        +DateOnly? nascimento
+        +string cpf
+        +string biografia
+        +string especialidade
+        +string contato
+        +int id_usuario
+    }
+
+    class Usuario {
+        +int Id
+        +string login
+        +string senha
+    }
+
+    class AssociacaoEventoPessoa {
+        +int Id
+        +int idEvento
+        +int idPessoa
+        +string tipo_pessoa
+    }
+
+    Evento "N" --> "1" Local : pertence a
+    Evento "N" --> "1" Pessoa : organizado por
+    Pessoa "1" --> "1" Usuario : possui
+    AssociacaoEventoPessoa "N" --> "1" Evento : evento
+    AssociacaoEventoPessoa "N" --> "1" Pessoa : pessoa
+    Usuario "1" --> "1" Pessoa : vinculado a
+```
+#### ESTRUTURAS DO PROJETO
 ```
 eventos_ger
-|
+│
 ├───Aplication
 │       Program.cs
 │
@@ -127,50 +374,45 @@ eventos_ger
 │       ControllerEvento.cs
 │       ControllerInscricao.cs
 │       ControllerLocal.cs
-│       ControllerOrganizador.cs
-│       ControllerPalestrante.cs
-│       ControllerParticipante.cs
-│
-├───Migrations
-│       20241224135830_InitialMigration.cs
-│       20241224135830_InitialMigration.Designer.cs
-│       Ger_Evento_BdModelSnapshot.cs
+│       ControllerLogin.cs
+│       ControllerPessoa.cs
 │
 ├───Model
 │   ├───DTOs
-│   │       eventoDTO.cs
-│   │       localDTO.cs
-│   │       organizadorDTO.cs
-│   │       palestranteDTO.cs
-│   │       participanteDTO.cs
-│   │       pessoaDTO.cs
+│   │   ├───Request
+│   │   │       eventoRequest.cs
+│   │   │       localRequest.cs
+│   │   │       loginRequest.cs
+│   │   │       pessoaRequest.cs
+│   │   │
+│   │   └───Response
+│   │           eventoResponse.cs
+│   │           localResponse.cs
+│   │           loginResponse.cs
+│   │           pessoaResponse.cs
 │   │
 │   └───Entity
 │           AssociacaoEventoPessoa.cs
 │           Evento.cs
 │           Ger_Evento_Bd.cs
 │           Local.cs
-│           Organizador.cs
-│           Palestrante.cs
-│           Participante.cs
 │           Pessoa.cs
+│           Usuario.cs
 │
 ├───Repository
 │   ├───Implementations
 │   │       AssociacaoEventoPessoaRepository.cs
 │   │       EventoRepository.cs
 │   │       LocalRepository.cs
-│   │       OrganizadorRepository.cs
-│   │       PalestranteRepository.cs
-│   │       ParticipanteRepository.cs
+│   │       PessoaRepository.cs
+│   │       UsuarioRepository.cs
 │   │
 │   └───Interfaces
 │           IAssociacaoEventoPessoa.cs
 │           IEventoRepository.cs
 │           ILocalRepository.cs
-│           IOrganizadorRepository.cs
-│           IPalestranteRepository.cs
-│           IParticipanteRepository.cs
+│           IPessoaRepository.cs
+│           IUsuarioRepository.cs
 │
 └───Service
     ├───Implementations
@@ -180,6 +422,7 @@ eventos_ger
     │       OrganizadorService.cs
     │       PalestranteService.cs
     │       ParticipanteService.cs
+    │       PessoaService.cs
     │
     └───Interface
             IEventoService.cs
@@ -188,4 +431,5 @@ eventos_ger
             IOrganizadorService.cs
             IPalestranteService.cs
             IParticipanteService.cs
+            IPessoaService.cs
 ```
