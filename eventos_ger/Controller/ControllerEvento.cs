@@ -51,10 +51,6 @@ namespace eventos_ger.Controller
             return CreatedAtAction(nameof(GetEvento), new { id = eventoCriado.Id }, eventoCriado);
         }
 
-
-
-
-
         // Atualizar evento
         [HttpPut("evento/{id}")]
         public async Task<IActionResult> PutEvento(int id, [FromBody] EventoDTORequest eventoRequestDTO)

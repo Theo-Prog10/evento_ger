@@ -2,7 +2,7 @@
 using eventos_ger.Model.DTOs.Request;
 using eventos_ger.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
-using eventos_ger.Model.DTOs.Response; // Adicione a referência à classe de resposta
+using eventos_ger.Model.DTOs.Response;
 
 namespace eventos_ger.Controller
 {
@@ -23,7 +23,7 @@ namespace eventos_ger.Controller
             var pessoa = await _pessoaService.ValidarLoginAsync(login, senha);
     
             if (pessoa == null)
-                return NotFound(null); // Retorna 404 caso não encontre o usuário
+                return NotFound(null);
 
             return Ok(pessoa); // Retorna o objeto Pessoa
         }

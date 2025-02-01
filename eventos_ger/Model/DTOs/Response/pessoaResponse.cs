@@ -8,6 +8,5 @@
         public List<int> EventosInscritos { get; set; } = new();
         public List<int> EventosPalestrados { get; set; } = new();
         public List<int> EventosOrganizados { get; set; } = new();
-        //public string? Login { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using eventos_ger.Model;
 using eventos_ger.Repository.Interfaces;
-using eventos_ger.Model.DTOs.Response; // Adicione a referência à sua classe de resposta
+using eventos_ger.Model.DTOs.Response;
 using eventos_ger.Model.DTOs.Request;
 using System;
 using System.Threading.Tasks;
@@ -34,7 +34,6 @@ namespace eventos_ger.Services
 
             foreach (var pessoa in pessoas)
             {
-                // Agora usamos o repositório para buscar os eventos diretamente
                 var eventosInscritos = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Participante");
                 var eventosPalestrados = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Palestrante");
                 var eventosOrganizados = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Organizador");
@@ -50,9 +49,6 @@ namespace eventos_ger.Services
 
             return pessoasDTO;
         }
-
-
-
 
         public async Task<PessoaDTOResponse> ObterPorIdAsync(int id)
         {
@@ -173,9 +169,5 @@ namespace eventos_ger.Services
                 EventosOrganizados = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Organizador")
             };
         }
-
-
-
-
     }
 }

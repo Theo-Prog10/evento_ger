@@ -15,9 +15,6 @@ namespace eventos_ger.Controller
             _inscricaoService = inscricaoService;
         }
 
-        /// <summary>
-        /// Inscreve um participante em um evento.
-        /// </summary>
         [HttpPost("evento/{eventoId}/participantes/{participanteId}")]
         public async Task<IActionResult> AddParticipante(int eventoId, int participanteId)
         {
@@ -36,9 +33,6 @@ namespace eventos_ger.Controller
             }
         }
 
-        /// <summary>
-        /// Adiciona um palestrante em um evento.
-        /// </summary>
         [HttpPost("evento/{eventoId}/palestrantes/{palestranteId}")]
         public async Task<IActionResult> AddPalestrante(int eventoId, int palestranteId)
         {
@@ -57,9 +51,6 @@ namespace eventos_ger.Controller
             }
         }
 
-        /// <summary>
-        /// Remove um participante de um evento.
-        /// </summary>
         [HttpDelete("evento/{eventoId}/participantes/{participanteId}")]
         public async Task<IActionResult> DeleteParticipanteEvento(int eventoId, int participanteId)
         {
@@ -68,7 +59,7 @@ namespace eventos_ger.Controller
                 var result = await _inscricaoService.DeleteParticipanteEventoAsync(participanteId, eventoId);
 
                 if (result)
-                    return NoContent(); // Sucesso sem conteúdo adicional
+                    return NoContent(); 
 
                 return BadRequest(new { mensagem = "Erro ao remover participante do evento." });
             }
@@ -78,9 +69,6 @@ namespace eventos_ger.Controller
             }
         }
 
-        /// <summary>
-        /// Remove um palestrante de um evento.
-        /// </summary>
         [HttpDelete("evento/{eventoId}/palestrantes/{palestranteId}")]
         public async Task<IActionResult> DeletePalestranteEvento(int eventoId, int palestranteId)
         {
@@ -89,7 +77,7 @@ namespace eventos_ger.Controller
                 var result = await _inscricaoService.DeletePalestranteEventoAsync(palestranteId, eventoId);
 
                 if (result)
-                    return NoContent(); // Sucesso sem conteúdo adicional
+                    return NoContent(); 
 
                 return BadRequest(new { mensagem = "Erro ao remover palestrante do evento." });
             }

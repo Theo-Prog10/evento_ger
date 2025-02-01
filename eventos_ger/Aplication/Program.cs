@@ -16,13 +16,10 @@ public partial class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        // Configuração do banco de dados PostgreSQL
-        // Configuração do banco de dados PostgreSQL com tratamento de exceções
         try
         {
             builder.Services.AddDbContext<Ger_Evento_Bd>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-            //builder.Services.AddDbContext<Ger_Evento_Bd>(opt => opt.UseInMemoryDatabase("Gerenciamento"));
         }
         catch (Exception ex)
         {
@@ -30,24 +27,17 @@ public partial class Program
             Console.WriteLine($"Erro ao configurar o DbContext: {ex.Message}");
             Console.WriteLine(ex.StackTrace);
 
-            // Se preferir, pode lançar novamente a exceção para interromper a execução
             throw;
         }
 
         // Registro de repositórios
-        //builder.Services.AddScoped<IParticipanteRepository, ParticipanteRepository>();
         builder.Services.AddScoped<IEventoRepository, EventoRepository>();
-        //builder.Services.AddScoped<IPalestranteRepository, PalestranteRepository>();
-        //builder.Services.AddScoped<IOrganizadorRepository, OrganizadorRepository>();
         builder.Services.AddScoped<ILocalRepository, LocalRepository>();
         builder.Services.AddScoped<IAssociacaoEventoPessoa, AssociacaoEventoPessoaRepository>();
         builder.Services.AddScoped<IPessoaRepository, PessoaRepository>();
         builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
         // Registro de serviços
-        //builder.Services.AddScoped<IParticipanteService, ParticipanteService>();
-        //builder.Services.AddScoped<IPalestranteService, PalestranteService>();
-        //builder.Services.AddScoped<IOrganizadorService, OrganizadorService>();
         builder.Services.AddScoped<IEventoService, EventoService>();
         builder.Services.AddScoped<ILocalService, LocalService>();
         builder.Services.AddScoped<IInscricaoService, InscricaoService>();

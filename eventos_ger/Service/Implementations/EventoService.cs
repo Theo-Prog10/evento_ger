@@ -28,13 +28,6 @@ namespace eventos_ger.Service
 
             foreach (var evento in eventosList)
             {
-                // Obtém os IDs dos palestrantes e participantes corretamente
-                var palestrantesIds = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Palestrante") 
-                                      ?? new List<int>();
-
-                var participantesIds = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Participante") 
-                                       ?? new List<int>();
-
                 eventosDTO.Add(new EventoDTOResponse
                 {
                     Id = evento.Id,
@@ -44,15 +37,13 @@ namespace eventos_ger.Service
                     Horario = evento.horario,
                     IdLocal = evento.id_local,
                     IdOrganizador = evento.id_organizador,
-                    Palestrantes = palestrantesIds,
-                    Participantes = participantesIds
+                    Palestrantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Palestrante"),
+                    Participantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Participante")
                 });
             }
 
             return eventosDTO;
         }
-
-
 
         public async Task<ActionResult<EventoDTOResponse>> GetEvento(int id)
         {
