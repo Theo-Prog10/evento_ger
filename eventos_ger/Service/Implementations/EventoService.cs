@@ -20,26 +20,39 @@ namespace eventos_ger.Service
             _associacaoEventoPessoa = associacaoEventoPessoa;
         }
 
-        public async Task<ActionResult<IEnumerable<EventoDTOResponse>>> GetEventos()
+        public async Task<ActionResult<IEnumerable<EventoDTOResponse>>> GetEventosPessoa(string login, string tipo_pessoa)
         {
-            var eventos = await _eventoRepository.ObterEventosAsync();
-            var eventosList = eventos.ToList();
+            // Obter o ID da pessoa pelo login
+            var pessoa = await _pessoaRepository.ObterPorLoginAsync(login);
+            if (pessoa == null)
+            {
+                return new NotFoundObjectResult("Usuário não encontrado.");
+            }
+
+            // Buscar eventos associados ao tipo de pessoa (participante, palestrante ou organizador)
+            var eventosIds = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, tipo_pessoa);
+
             var eventosDTO = new List<EventoDTOResponse>();
 
-            foreach (var evento in eventosList)
+            // Loop para obter detalhes de cada evento pelo ID
+            foreach (var eventoId in eventosIds)
             {
-                eventosDTO.Add(new EventoDTOResponse
+                var evento = await _eventoRepository.ObterPorIdAsync(eventoId);
+                if (evento != null)
                 {
-                    Id = evento.Id,
-                    Nome = evento.nome,
-                    Descricao = evento.descricao,
-                    Data = evento.data,
-                    Horario = evento.horario,
-                    IdLocal = evento.id_local,
-                    IdOrganizador = evento.id_organizador,
-                    Palestrantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Palestrante"),
-                    Participantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Participante")
-                });
+                    eventosDTO.Add(new EventoDTOResponse
+                    {
+                        Id = evento.Id,
+                        Nome = evento.nome,
+                        Descricao = evento.descricao,
+                        Data = evento.data,
+                        Horario = evento.horario,
+                        IdLocal = evento.id_local,
+                        IdOrganizador = evento.id_organizador,
+                        Palestrantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Palestrante"),
+                        Participantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Participante")
+                    });
+                }
             }
 
             return eventosDTO;

@@ -17,12 +17,12 @@ namespace eventos_ger.Controller
             _eventoService = eventoService;
         }
 
-        // Listar eventos
-        [HttpGet("/eventos")]
-        public async Task<ActionResult<IEnumerable<EventoDTOResponse>>> GetEventos()
+        // Listar eventos associados a pessoa
+        [HttpGet("/eventosPessoa/{login}/{tipo_pessoa}")]
+        public async Task<ActionResult<IEnumerable<EventoDTOResponse>>> GetEventosPessoa(string login, string tipo_pessoa)
         {
-            var eventos = await _eventoService.GetEventos();
-            return Ok(eventos);
+            var eventos = await _eventoService.GetEventosPessoa(login, tipo_pessoa);
+            return (eventos);
         }
 
         // Listar evento por id
@@ -33,7 +33,19 @@ namespace eventos_ger.Controller
             if (evento == null)
                 return NotFound(new { mensagem = "Evento não encontrado." });
 
-            return Ok(evento);
+            return (evento);
+        }
+        
+        // Listar participantes por evento
+        [HttpGet("evento/{id}/{login}/{tipo_pessoa}")]
+        public async Task<ActionResult<EventoDTOResponse>> GetPessoasEvento(int id, string login, string tipo_pessoa)
+        {
+            var evento = await _eventoService.GetEvento(id);
+            if (evento == null)
+                return NotFound(new { mensagem = "Evento não encontrado." });
+            //var pessoas = await _
+
+            return (evento);
         }
 
         // Criar evento

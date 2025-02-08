@@ -24,6 +24,12 @@ namespace eventos_ger.Repository
             return await _context.Pessoas
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
+        
+        public async Task<Pessoa?> ObterPorLoginAsync(string login)
+        {
+            return await _context.Pessoas
+                .FirstOrDefaultAsync(p => p.Usuario.login == login);
+        }
 
         public async Task<Pessoa> AdicionarAsync(Pessoa pessoa)
         {
@@ -89,11 +95,5 @@ namespace eventos_ger.Repository
                 .Select(joined => joined.Pessoa)
                 .FirstOrDefaultAsync();
         }
-
-
-
-
-
-        
     }
 }

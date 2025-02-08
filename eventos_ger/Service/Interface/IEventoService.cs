@@ -7,7 +7,7 @@ namespace eventos_ger.Service.Interface;
 
 public interface IEventoService
 {
-    Task<ActionResult<IEnumerable<EventoDTOResponse>>> GetEventos();
+    Task<ActionResult<IEnumerable<EventoDTOResponse>>> GetEventosPessoa(string login, string tipo_pessoa);
     Task<ActionResult<EventoDTOResponse>> GetEvento(int id);
     Task<EventoDTOResponse> PostEvento(EventoDTORequest eventoDTORequest);
     Task<IActionResult> PutEvento(int id, EventoDTORequest eventoDTORequest);

@@ -15,6 +15,12 @@ public partial class Program
         // Configuração de serviços
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddCors(options => {
+            options.AddPolicy("AllowFrontend",
+                policy => policy.WithOrigins("http://localhost:8081") // Ou sua URL
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+        });
 
         try
         {
@@ -47,9 +53,10 @@ public partial class Program
         builder.Services.AddControllers();
 
         var app = builder.Build();
+        
+        app.UseCors("AllowFrontend");
 
         // Configuração do Swagger
-        
         app.UseSwagger();
         app.UseSwaggerUI();
 

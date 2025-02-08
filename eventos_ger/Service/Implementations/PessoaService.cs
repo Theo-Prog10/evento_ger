@@ -5,6 +5,7 @@ using eventos_ger.Model.DTOs.Request;
 using System;
 using System.Threading.Tasks;
 using eventos_ger.Service.Interface;
+using Microsoft.AspNetCore.Mvc;
 
 namespace eventos_ger.Services
 {
@@ -13,12 +14,14 @@ namespace eventos_ger.Services
         private readonly IPessoaRepository _pessoaRepository;
         private readonly IAssociacaoEventoPessoa _associacaoEventoPessoa;
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IEventoRepository _eventoRepository;
 
-        public PessoaService(IPessoaRepository pessoaRepository, IAssociacaoEventoPessoa associacaoEventoPessoa, IUsuarioRepository usuarioRepository)
+        public PessoaService(IPessoaRepository pessoaRepository, IAssociacaoEventoPessoa associacaoEventoPessoa, IUsuarioRepository usuarioRepository, IEventoRepository eventoRepository)
         {
             _pessoaRepository = pessoaRepository;
             _associacaoEventoPessoa = associacaoEventoPessoa;
             _usuarioRepository = usuarioRepository;
+            _eventoRepository = eventoRepository;
         }
         
         
@@ -49,10 +52,52 @@ namespace eventos_ger.Services
 
             return pessoasDTO;
         }
+        public async Task<IEnumerable<PessoaDTOResponse>> ObterPessoasEvento(int id, string tipo_pessoa)
+        {
+            // Buscar evento
+            var evento = await _eventoRepository.ObterPorIdAsync(id);
+            if (evento == null) return null;
+
+            var idsPessoas = await _associacaoEventoPessoa.ObterPessoasAsync(id, tipo_pessoa);
+            
+            // Mapear para DTO
+            var pessoasDTO = new List<PessoaDTOResponse>();
+
+            foreach (var id_p in idsPessoas)
+            {
+                // Obter detalhes da pessoa pelo ID
+                var pessoaDetalhe = await _pessoaRepository.ObterPorIdAsync(id_p);
+                if (pessoaDetalhe != null)
+                {
+                    pessoasDTO.Add(new PessoaDTOResponse
+                    {
+                        Nome = pessoaDetalhe.nome
+                    });
+                }
+            }
+
+            return pessoasDTO;
+        }
 
         public async Task<PessoaDTOResponse> ObterPorIdAsync(int id)
         {
             var pessoa = await _pessoaRepository.ObterPorIdAsync(id);
+            if (pessoa == null) return null;
+
+            return new PessoaDTOResponse
+            {
+                Nome = pessoa.nome,
+                Nascimento = pessoa.nascimento,
+                Cpf = pessoa.cpf,
+                EventosInscritos = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Participante"),
+                EventosPalestrados = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Palestrante"),
+                EventosOrganizados = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Organizador")
+            };
+        }
+        
+        public async Task<PessoaDTOResponse> ObterPorLoginAsync(string login)
+        {
+            var pessoa = await _pessoaRepository.ObterPorLoginAsync(login);
             if (pessoa == null) return null;
 
             return new PessoaDTOResponse

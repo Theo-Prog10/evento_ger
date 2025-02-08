@@ -7,7 +7,7 @@ using eventos_ger.Model.DTOs.Response;
 namespace eventos_ger.Controller
 {
     [ApiController]
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")]
     public class LoginController : ControllerBase
     {
         private readonly IPessoaService _pessoaService;
@@ -17,15 +17,15 @@ namespace eventos_ger.Controller
             _pessoaService = pessoaService;
         }
 
-        [HttpGet("login")]
-        public async Task<ActionResult<PessoaDTOResponse?>> Login(string login, string senha)
+        [HttpPost("login")] // Alterado para POST
+        public async Task<ActionResult<PessoaDTOResponse?>> Login([FromBody] loginRequest request)
         {
-            var pessoa = await _pessoaService.ValidarLoginAsync(login, senha);
+            var pessoa = await _pessoaService.ValidarLoginAsync(request.Login, request.Senha);
     
             if (pessoa == null)
-                return NotFound(null);
+                return Unauthorized(); // Melhor que NotFound para credenciais inválidas
 
-            return Ok(pessoa); // Retorna o objeto Pessoa
+            return Ok(pessoa);
         }
 
     }

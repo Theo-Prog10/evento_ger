@@ -27,8 +27,27 @@ public class PessoaController : ControllerBase
     {
         var pessoa = await _pessoaService.ObterPorIdAsync(id);
         if (pessoa == null) return NotFound();
-        return Ok(pessoa);
+        return (pessoa);
     }
+    
+    // Obter pessoa por evento (retorna PessoaDTOResponse)
+    [HttpGet("evento/{idEvento}/{tipo_pessoa}")]
+    public async Task<ActionResult<IEnumerable<PessoaDTOResponse>>> GetPessoasEvento(int idEvento, string tipo_pessoa)
+    {
+        var pessoas = await _pessoaService.ObterPessoasEvento(idEvento, tipo_pessoa);
+        if (pessoas == null) return NotFound();
+        return Ok(pessoas);
+    }
+    
+    // Obter pessoa por Login (retorna PessoaDTOResponse)
+    [HttpGet("pessoa/{login}")]
+    public async Task<ActionResult<PessoaDTOResponse>> GetPessoas(string login)
+    {
+        var pessoa = await _pessoaService.ObterPorLoginAsync(login);
+        if (pessoa == null) return NotFound();
+        return (pessoa);
+    }
+    
 
     // Criar pessoa (usa PessoaDTORequest para a entrada e retorna PessoaDTOResponse)
     [HttpPost("pessoa")]
