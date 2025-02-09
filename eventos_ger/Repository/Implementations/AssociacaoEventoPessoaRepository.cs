@@ -15,11 +15,12 @@ public class AssociacaoEventoPessoaRepository : IAssociacaoEventoPessoa
 
     public async Task<AssociacaoEventoPessoa> ObterAssociacaoAsync(int idEvento, int idPessoa, string tipo_pessoa)
     {
-        return await _context.Associacoes
+        var aux = await _context.Associacoes
             .FirstOrDefaultAsync(a =>
                 a.idEvento == idEvento &&
-                a.Id == idPessoa &&
+                a.idPessoa == idPessoa &&
                 a.tipo_pessoa == tipo_pessoa);
+        return aux;
     }
     
     
@@ -53,7 +54,7 @@ public class AssociacaoEventoPessoaRepository : IAssociacaoEventoPessoa
     public async Task<AssociacaoEventoPessoa> RemoverAsync(AssociacaoEventoPessoa associacao)
     {
         //Busca a entidade correspondente
-        var associacaoExistente = await ObterAssociacaoAsync(associacao.idEvento, associacao.Id, associacao.tipo_pessoa);
+        var associacaoExistente = await ObterAssociacaoAsync(associacao.idEvento, associacao.idPessoa, associacao.tipo_pessoa);
 
         if (associacaoExistente == null) return null;
         

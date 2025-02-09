@@ -30,9 +30,14 @@ namespace eventos_ger.Services
             var pessoas = await _pessoaRepository.ObterTodosAsync();
             var pessoasDTO = pessoas.Select(p => new PessoaDTOResponse
             {
+                id = p.Id,
                 Nome = p.nome,
                 Nascimento = p.nascimento,
-                Cpf = p.cpf
+                Cpf = p.cpf,
+                biografia = p.biografia,
+                especialidade = p.especialidade,
+                contato = p.contato
+                
             }).ToList();
 
             foreach (var pessoa in pessoas)
@@ -86,9 +91,13 @@ namespace eventos_ger.Services
 
             return new PessoaDTOResponse
             {
+                id = pessoa.Id,
                 Nome = pessoa.nome,
                 Nascimento = pessoa.nascimento,
                 Cpf = pessoa.cpf,
+                biografia = pessoa.biografia,
+                especialidade = pessoa.especialidade,
+                contato = pessoa.contato,
                 EventosInscritos = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Participante"),
                 EventosPalestrados = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Palestrante"),
                 EventosOrganizados = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Organizador")
@@ -102,9 +111,13 @@ namespace eventos_ger.Services
 
             return new PessoaDTOResponse
             {
+                id = pessoa.Id,
                 Nome = pessoa.nome,
                 Nascimento = pessoa.nascimento,
                 Cpf = pessoa.cpf,
+                biografia = pessoa.biografia,
+                especialidade = pessoa.especialidade,
+                contato = pessoa.contato,
                 EventosInscritos = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Participante"),
                 EventosPalestrados = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Palestrante"),
                 EventosOrganizados = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Organizador")
@@ -149,9 +162,13 @@ namespace eventos_ger.Services
 
             return new PessoaDTOResponse
             {
+                id = pessoa.Id,
                 Nome = pessoaCriada.nome,
                 Nascimento = pessoaCriada.nascimento,
                 Cpf = pessoaCriada.cpf,
+                biografia = pessoa.biografia,
+                especialidade = pessoa.especialidade,
+                contato = pessoa.contato,
                 EventosInscritos = await _associacaoEventoPessoa.ObterEventosAsync(pessoaCriada.Id, "Participante"),
                 EventosPalestrados = await _associacaoEventoPessoa.ObterEventosAsync(pessoaCriada.Id, "Palestrante"),
                 EventosOrganizados = await _associacaoEventoPessoa.ObterEventosAsync(pessoaCriada.Id, "Organizador")
@@ -171,15 +188,22 @@ namespace eventos_ger.Services
             pessoa.nome = pessoaDTORequest.Nome;
             pessoa.nascimento = pessoaDTORequest.Nascimento;
             pessoa.cpf = pessoaDTORequest.Cpf;
+            pessoa.biografia = pessoaDTORequest.biografia;
+            pessoa.contato = pessoaDTORequest.contato;
+            pessoa.especialidade = pessoaDTORequest.especialidade;
 
             await _pessoaRepository.AtualizarAsync(pessoa);
 
             // Retornar o PessoaDTOResponse após atualização
             return new PessoaDTOResponse
             {
+                id = pessoa.Id,
                 Nome = pessoa.nome,
                 Nascimento = pessoa.nascimento,
                 Cpf = pessoa.cpf,
+                biografia = pessoa.biografia,
+                especialidade = pessoa.especialidade,
+                contato = pessoa.contato,
                 EventosInscritos = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Participante"),
                 EventosPalestrados = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Palestrante"),
                 EventosOrganizados = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Organizador")
@@ -206,9 +230,13 @@ namespace eventos_ger.Services
 
             return new PessoaDTOResponse
             {
+                id = pessoa.Id,
                 Nome = pessoa.nome,
                 Nascimento = pessoa.nascimento,
                 Cpf = pessoa.cpf,
+                biografia = pessoa.biografia,
+                especialidade = pessoa.especialidade,
+                contato = pessoa.contato,
                 EventosInscritos = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Participante"),
                 EventosPalestrados = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Palestrante"),
                 EventosOrganizados = await _associacaoEventoPessoa.ObterEventosAsync(pessoa.Id, "Organizador")

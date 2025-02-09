@@ -40,7 +40,7 @@ public class PessoaController : ControllerBase
     }
     
     // Obter pessoa por Login (retorna PessoaDTOResponse)
-    [HttpGet("pessoa/{login}")]
+    [HttpGet("loginToPessoa/{login}")]
     public async Task<ActionResult<PessoaDTOResponse>> GetPessoas(string login)
     {
         var pessoa = await _pessoaService.ObterPorLoginAsync(login);

@@ -20,6 +20,30 @@ namespace eventos_ger.Service
             _associacaoEventoPessoa = associacaoEventoPessoa;
         }
 
+        public async Task<ActionResult<IEnumerable<EventoDTOResponse>>> GetEventos()
+        {
+            var eventos = await _eventoRepository.ObterEventosAsync();
+            var eventosList = eventos.ToList();
+            var eventosDTO = new List<EventoDTOResponse>();
+
+            foreach (var evento in eventosList)
+            {
+                eventosDTO.Add(new EventoDTOResponse
+                {
+                    Id = evento.Id,
+                    Nome = evento.nome,
+                    Descricao = evento.descricao,
+                    Data = evento.data,
+                    Horario = evento.horario,
+                    IdLocal = evento.id_local,
+                    IdOrganizador = evento.id_organizador,
+                    Palestrantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Palestrante"),
+                    Participantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Participante")
+                });
+            }
+            return eventosDTO;
+        }
+
         public async Task<ActionResult<IEnumerable<EventoDTOResponse>>> GetEventosPessoa(string login, string tipo_pessoa)
         {
             // Obter o ID da pessoa pelo login

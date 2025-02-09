@@ -17,6 +17,13 @@ namespace eventos_ger.Controller
             _eventoService = eventoService;
         }
 
+        [HttpGet("/eventos")]
+        public async Task<ActionResult<IEnumerable<EventoDTOResponse>>> GetEventos()
+        {
+            var eventos = await _eventoService.GetEventos();
+            return (eventos);
+        }
+
         // Listar eventos associados a pessoa
         [HttpGet("/eventosPessoa/{login}/{tipo_pessoa}")]
         public async Task<ActionResult<IEnumerable<EventoDTOResponse>>> GetEventosPessoa(string login, string tipo_pessoa)

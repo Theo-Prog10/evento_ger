@@ -11,6 +11,6 @@
         public int IdOrganizador { get; set; }
 
         public List<int> Palestrantes { get; set; } = new();
-        public List<int> Participantes { get; set; } = new();
+        public List<int> Participantes { get; set; } = new List<int>();
     }
 }
