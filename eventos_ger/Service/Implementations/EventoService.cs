@@ -12,12 +12,14 @@ namespace eventos_ger.Service
         private readonly IEventoRepository _eventoRepository;
         private readonly IPessoaRepository _pessoaRepository;
         private readonly IAssociacaoEventoPessoa _associacaoEventoPessoa;
+        private readonly ILocalRepository _localRepository;
 
-        public EventoService(IEventoRepository eventoRepository, IPessoaRepository pessoaRepository, IAssociacaoEventoPessoa associacaoEventoPessoa)
+        public EventoService(IEventoRepository eventoRepository, IPessoaRepository pessoaRepository, IAssociacaoEventoPessoa associacaoEventoPessoa, ILocalRepository localRepository)
         {
             _eventoRepository = eventoRepository;
             _pessoaRepository = pessoaRepository;
             _associacaoEventoPessoa = associacaoEventoPessoa;
+            _localRepository = localRepository;
         }
 
         public async Task<ActionResult<IEnumerable<EventoDTOResponse>>> GetEventos()
@@ -28,6 +30,7 @@ namespace eventos_ger.Service
 
             foreach (var evento in eventosList)
             {
+                var local = await _localRepository.ObterPorIdAsync(evento.id_local);
                 eventosDTO.Add(new EventoDTOResponse
                 {
                     Id = evento.Id,
@@ -35,7 +38,7 @@ namespace eventos_ger.Service
                     Descricao = evento.descricao,
                     Data = evento.data,
                     Horario = evento.horario,
-                    IdLocal = evento.id_local,
+                    NomeLocal = local.nome,
                     IdOrganizador = evento.id_organizador,
                     Palestrantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Palestrante"),
                     Participantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Participante")
@@ -62,6 +65,7 @@ namespace eventos_ger.Service
             foreach (var eventoId in eventosIds)
             {
                 var evento = await _eventoRepository.ObterPorIdAsync(eventoId);
+                var local = await _localRepository.ObterPorIdAsync(evento.id_local);
                 if (evento != null)
                 {
                     eventosDTO.Add(new EventoDTOResponse
@@ -71,7 +75,7 @@ namespace eventos_ger.Service
                         Descricao = evento.descricao,
                         Data = evento.data,
                         Horario = evento.horario,
-                        IdLocal = evento.id_local,
+                        NomeLocal = local.nome,
                         IdOrganizador = evento.id_organizador,
                         Palestrantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Palestrante"),
                         Participantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Participante")
@@ -89,7 +93,8 @@ namespace eventos_ger.Service
             {
                 return new NotFoundResult();
             }
-
+            
+            var local = await _localRepository.ObterPorIdAsync(evento.id_local);
             var eventoDTO = new EventoDTOResponse
             {
                 Id = evento.Id,
@@ -97,7 +102,7 @@ namespace eventos_ger.Service
                 Descricao = evento.descricao,
                 Data = evento.data,
                 Horario = evento.horario,
-                IdLocal = evento.id_local,
+                NomeLocal = local.nome,
                 IdOrganizador = evento.id_organizador,
                 Palestrantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Palestrante"),
                 Participantes = await _associacaoEventoPessoa.ObterPessoasAsync(evento.Id, "Participante")
@@ -134,6 +139,7 @@ namespace eventos_ger.Service
             };
 
             await _associacaoEventoPessoa.AdicionarAsync(associacao);
+            var local = await _localRepository.ObterPorIdAsync(evento.id_local);
 
             var eventoDTOResponse = new EventoDTOResponse
             {
@@ -142,7 +148,7 @@ namespace eventos_ger.Service
                 Descricao = evento.descricao,
                 Data = evento.data,
                 Horario = evento.horario,
-                IdLocal = evento.id_local,
+                NomeLocal = local.nome,
                 IdOrganizador = evento.id_organizador,
                 Palestrantes = eventoDTORequest.Palestrantes,
                 Participantes = eventoDTORequest.Participantes
@@ -169,6 +175,7 @@ namespace eventos_ger.Service
             eventoExistente.id_organizador = eventoDTORequest.IdOrganizador;
 
             await _eventoRepository.AtualizarAsync(eventoExistente);
+            var local = await _localRepository.ObterPorIdAsync(eventoExistente.id_local);
 
             var eventoDTOResponse = new EventoDTOResponse
             {
@@ -177,7 +184,7 @@ namespace eventos_ger.Service
                 Descricao = eventoExistente.descricao,
                 Data = eventoExistente.data,
                 Horario = eventoExistente.horario,
-                IdLocal = eventoExistente.id_local,
+                NomeLocal = local.nome,
                 IdOrganizador = eventoExistente.id_organizador,
                 Palestrantes = eventoDTORequest.Palestrantes,
                 Participantes = eventoDTORequest.Participantes
