@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using eventos_ger.Model;
 using eventos_ger.Repository.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace eventos_ger.Repository;
 
@@ -18,7 +19,7 @@ public class EventoRepository : IEventoRepository
         return await _context.Eventos.ToListAsync();
     }
 
-    public async Task<Evento> ObterPorIdAsync(int id)
+    public async Task<Evento?> ObterPorIdAsync(int id)
     {
         return await _context.Eventos.FirstOrDefaultAsync(e => e.Id == id);
     }
@@ -55,7 +56,7 @@ public class EventoRepository : IEventoRepository
     }
 
 
-    public async Task DeletarAsync(int id)
+    public async Task<bool>DeletarAsync(int id)
     {
         //Busca o evento
         var evento = await _context.Eventos.FindAsync(id);
@@ -71,7 +72,10 @@ public class EventoRepository : IEventoRepository
             
             _context.Eventos.Remove(evento);
             await _context.SaveChangesAsync();
+            
+            return true;
         }
+        return false;
     }
 
 

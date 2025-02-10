@@ -199,17 +199,17 @@ namespace eventos_ger.Service
         }
 
 
-        public async Task<IActionResult> DeleteEvento(int id)
+        public async Task<bool> DeleteEvento(int id)
         {
             var evento = await _eventoRepository.ObterPorIdAsync(id);
             if (evento == null)
             {
-                return new NotFoundResult();
+                return false; // Evento não encontrado
             }
 
-            await _eventoRepository.DeletarAsync(id);
-
-            return new NoContentResult();
+            var resultado = await _eventoRepository.DeletarAsync(id);
+        
+            return resultado;
         }
     }
 }

@@ -93,7 +93,11 @@ namespace eventos_ger.Controller
         [HttpDelete("evento/{id}")]
         public async Task<IActionResult> DeleteEvento(int id)
         {
-            return await _eventoService.DeleteEvento(id);
+            var result =  await _eventoService.DeleteEvento(id);
+            if (result)
+                return Ok(true); 
+            
+            return NotFound(false);
         }
 
     }

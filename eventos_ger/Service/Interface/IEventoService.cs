@@ -11,6 +11,6 @@ public interface IEventoService
     Task<ActionResult<EventoDTOResponse>> GetEvento(int id);
     Task<EventoDTOResponse> PostEvento(EventoDTORequest eventoDTORequest);
     Task<IActionResult> PutEvento(int id, EventoDTORequest eventoDTORequest);
-    Task<IActionResult> DeleteEvento(int id);
+    Task<bool> DeleteEvento(int id);
     Task<ActionResult<IEnumerable<EventoDTOResponse>>> GetEventos();
 }
